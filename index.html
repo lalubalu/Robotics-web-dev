@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Build Robotics Studio — Community Platform</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23e55b2d'/><text y='72' x='14' font-size='72'>🤖</text></svg>" />
+</head>
+<body>
+
+<!-- ======================================================
+     LOADING
+     ====================================================== -->
+<div id="loading-screen">
+  <div class="loader-wordmark">
+    <div class="loader-icon">🤖</div>
+    <span class="loader-name">Build Robotics Studio</span>
+  </div>
+  <div class="loader-track">
+    <div class="loader-bar"></div>
+  </div>
+  <div class="loader-status">Loading workspace...</div>
+</div>
+
+<!-- ======================================================
+     LANDING PAGE
+     ====================================================== -->
+<div id="landing-page" style="display:none">
+
+  <!-- NAV -->
+  <nav class="site-nav">
+    <div class="nav-wordmark" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+      <div class="nav-logo-sq">🤖</div>
+      <span class="nav-wordmark-text">Build Robotics Studio</span>
+    </div>
+    <ul class="nav-links-list">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#community">Community</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <div class="nav-spacer"></div>
+    <div class="nav-actions">
+      <button class="btn btn-ghost btn-sm" onclick="launchApp()">Sign in</button>
+      <button class="btn btn-accent btn-sm" onclick="launchApp()">Join free →</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div style="max-width:var(--content-max);margin:0 auto;padding:0 2.5rem">
+    <div class="hero">
+      <div class="hero-left">
+        <div class="hero-eyebrow">
+          <div class="hero-pulse"></div>
+          <span class="t-label" style="color:var(--text-2)">47 members online right now</span>
+        </div>
+
+        <h1 class="hero-heading">
+          Where robotics<br>teams <em>build,</em><br>learn &amp; compete.
+        </h1>
+
+        <p class="hero-body">
+          Build Robotics Studio is the all-in-one community hub for students, mentors, and makers. Collaborate on real projects, access expert resources, and push the boundaries of what's possible.
+        </p>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-lg" onclick="launchApp()">Open the studio</button>
+          <div class="hero-divider"></div>
+          <button class="btn btn-ghost btn-lg" onclick="launchApp();navigateTo('projects')" style="color:var(--text-2)">Browse projects →</button>
+        </div>
+
+        <div class="hero-social-proof">
+          <div class="hero-avatars">
+            <div class="hero-avatar" style="background:#2563eb">AC</div>
+            <div class="hero-avatar" style="background:#16a34a">MR</div>
+            <div class="hero-avatar" style="background:#e55b2d">SP</div>
+            <div class="hero-avatar" style="background:#7c3aed">JK</div>
+            <div class="hero-avatar" style="background:#0891b2">RZ</div>
+          </div>
+          <div class="hero-social-text">
+            Joined by <strong>247+ builders</strong> from MIT, Stanford, CMU &amp; more
+          </div>
+        </div>
+      </div>
+
+      <!-- PREVIEW CARD -->
+      <div class="hero-right">
+        <div class="hero-preview-card">
+          <div class="preview-card-header">
+            <div class="preview-dot" style="background:#ef4444"></div>
+            <div class="preview-dot" style="background:#f59e0b;margin-left:5px"></div>
+            <div class="preview-dot" style="background:#22c55e;margin-left:5px"></div>
+            <span class="preview-header-title" style="margin-left:.75rem">Dashboard — Project Hub</span>
+          </div>
+          <div class="preview-body">
+            <div class="preview-project">
+              <div class="preview-project-icon" style="background:#fff4ef">🤖</div>
+              <div class="preview-project-info">
+                <div class="preview-project-name">Autonomous Pathfinder</div>
+                <div class="preview-project-meta">3 members · Updated 2h ago</div>
+                <div class="preview-project-bar">
+                  <div class="preview-project-fill" style="width:0" data-w="72%"></div>
+                </div>
+              </div>
+              <span style="font-family:var(--font-mono);font-size:.6875rem;color:var(--text-3);flex-shrink:0">72%</span>
+            </div>
+            <div class="preview-project">
+              <div class="preview-project-icon" style="background:#eff6ff">🌊</div>
+              <div class="preview-project-info">
+                <div class="preview-project-name">HydroBot 3000</div>
+                <div class="preview-project-meta">3 members · Updated 4h ago</div>
+                <div class="preview-project-bar">
+                  <div class="preview-project-fill" style="width:0;background:#2563eb" data-w="55%"></div>
+                </div>
+              </div>
+              <span style="font-family:var(--font-mono);font-size:.6875rem;color:var(--text-3);flex-shrink:0">55%</span>
+            </div>
+            <div class="preview-project">
+              <div class="preview-project-icon" style="background:#f0fdf4">🦾</div>
+              <div class="preview-project-info">
+                <div class="preview-project-name">ExoArm Assist</div>
+                <div class="preview-project-meta">4 members · Updated 6h ago</div>
+                <div class="preview-project-bar">
+                  <div class="preview-project-fill" style="width:0;background:#16a34a" data-w="88%"></div>
+                </div>
+              </div>
+              <span style="font-family:var(--font-mono);font-size:.6875rem;color:var(--text-3);flex-shrink:0">88%</span>
+            </div>
+            <div class="preview-stats">
+              <div class="preview-stat">
+                <div class="preview-stat-n">247</div>
+                <div class="preview-stat-l">Members</div>
+              </div>
+              <div class="preview-stat">
+                <div class="preview-stat-n">63</div>
+                <div class="preview-stat-l">Projects</div>
+              </div>
+              <div class="preview-stat">
+                <div class="preview-stat-n">18</div>
+                <div class="preview-stat-l">Awards</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-badge-float">
+          <div class="hero-badge-float-icon">🏆</div>
+          <div class="hero-badge-float-text">
+            <strong>Regional Champions</strong>
+            <span>Spring 2025 · 18 trophies total</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIVIDER -->
+  <div class="section-divider"><hr style="border:none;border-top:1px solid var(--border)"></div>
+
+  <!-- STATS ROW -->
+  <div style="max-width:var(--content-max);margin:0 auto;padding:2.5rem 2.5rem;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:1px solid var(--border)">
+    <div style="padding:1.5rem 2rem;border-right:1px solid var(--border)">
+      <div style="font-family:var(--font-serif);font-size:2.5rem;color:var(--text-1);line-height:1">247+</div>
+      <div style="font-size:.8125rem;color:var(--text-3);margin-top:.375rem">Active members across 34 universities</div>
+    </div>
+    <div style="padding:1.5rem 2rem;border-right:1px solid var(--border)">
+      <div style="font-family:var(--font-serif);font-size:2.5rem;color:var(--text-1);line-height:1">63</div>
+      <div style="font-size:.8125rem;color:var(--text-3);margin-top:.375rem">Live projects in the hub right now</div>
+    </div>
+    <div style="padding:1.5rem 2rem;border-right:1px solid var(--border)">
+      <div style="font-family:var(--font-serif);font-size:2.5rem;color:var(--text-1);line-height:1">18</div>
+      <div style="font-size:.8125rem;color:var(--text-3);margin-top:.375rem">Competition wins across 4 years</div>
+    </div>
+    <div style="padding:1.5rem 2rem">
+      <div style="font-family:var(--font-serif);font-size:2.5rem;color:var(--text-1);line-height:1">140+</div>
+      <div style="font-size:.8125rem;color:var(--text-3);margin-top:.375rem">Tutorials, guides &amp; templates</div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section class="landing-section" id="features">
+    <div class="features-layout">
+      <div class="features-sticky">
+        <div class="section-eyebrow">
+          <div class="section-eyebrow-line"></div>
+          <span class="t-label">What's inside</span>
+        </div>
+        <h2 class="features-heading">Built for the way teams actually work.</h2>
+        <p class="features-body">
+          Everything from first sketch to competition day. Profiles, projects, chat, calendar, resources, and recognition — in one place.
+        </p>
+        <button class="btn btn-accent" onclick="launchApp()">Start building →</button>
+      </div>
+
+      <div class="features-list">
+        <div class="feature-item reveal" onclick="launchApp();navigateTo('profiles')">
+          <span class="feature-item-num">01</span>
+          <div class="feature-item-content">
+            <div class="feature-item-title">Member Profiles</div>
+            <div class="feature-item-desc">Every builder gets a profile: skills, school, current projects, and role. Find the collaborator you need, or let them find you.</div>
+          </div>
+        </div>
+        <div class="feature-item reveal reveal-delay-1" onclick="launchApp();navigateTo('projects')">
+          <span class="feature-item-num">02</span>
+          <div class="feature-item-content">
+            <div class="feature-item-title">Project Hub</div>
+            <div class="feature-item-desc">Create or join projects. Track tasks, upload CAD files, code, and media. See real progress, not just promises.</div>
+          </div>
+        </div>
+        <div class="feature-item reveal reveal-delay-2" onclick="launchApp();navigateTo('chat')">
+          <span class="feature-item-num">03</span>
+          <div class="feature-item-content">
+            <div class="feature-item-title">Team Chat &amp; DMs</div>
+            <div class="feature-item-desc">Project channels, direct messages, mentor threads. Smart notifications so nothing important gets buried.</div>
+          </div>
+        </div>
+        <div class="feature-item reveal reveal-delay-3" onclick="launchApp();navigateTo('calendar')">
+          <span class="feature-item-num">04</span>
+          <div class="feature-item-content">
+            <div class="feature-item-title">Events &amp; Calendar</div>
+            <div class="feature-item-desc">Competitions, workshops, weekly challenges. RSVP, set reminders, see what the whole community is building toward.</div>
+          </div>
+        </div>
+        <div class="feature-item reveal reveal-delay-4" onclick="launchApp();navigateTo('resources')">
+          <span class="feature-item-num">05</span>
+          <div class="feature-item-content">
+            <div class="feature-item-title">Resource Library</div>
+            <div class="feature-item-desc">Community-curated tutorials, guides, and templates. Searchable by topic and skill level. Anyone can contribute.</div>
+          </div>
+        </div>
+        <div class="feature-item reveal" onclick="launchApp();navigateTo('leaderboard')">
+          <span class="feature-item-num">06</span>
+          <div class="feature-item-content">
+            <div class="feature-item-title">Recognition &amp; Badges</div>
+            <div class="feature-item-desc">Points, badges, and leaderboards. Active builders and contributors get seen. Good work doesn't go unnoticed.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <div class="section-alt">
+    <section class="landing-section" id="projects">
+      <div class="section-eyebrow">
+        <div class="section-eyebrow-line"></div>
+        <span class="t-label">What's being built</span>
+      </div>
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem">
+        <h2 style="font-family:var(--font-serif);font-size:2rem;letter-spacing:-0.02em;line-height:1.1;margin-top:.75rem">Live projects from the community.</h2>
+        <button class="btn btn-outline" onclick="launchApp();navigateTo('projects')">View all 63 →</button>
+      </div>
+
+      <div class="landing-projects-list">
+        <div class="landing-project-row reveal" onclick="launchApp();navigateTo('projects')">
+          <div class="landing-project-emoji">🤖</div>
+          <div class="landing-project-info">
+            <div class="landing-project-name">Autonomous Pathfinder</div>
+            <div class="landing-project-desc">SLAM navigation + computer vision for a fully autonomous mobile robot in dynamic environments. ROS2 + Python.</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.75rem;flex-shrink:0">
+            <span class="chip chip-green">Active</span>
+            <div class="landing-project-progress-wrap">
+              <div class="landing-project-progress-label">72%</div>
+              <div class="landing-project-bar"><div class="landing-project-fill" style="width:72%"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="landing-project-row reveal reveal-delay-1" onclick="launchApp();navigateTo('projects')">
+          <div class="landing-project-emoji">🌊</div>
+          <div class="landing-project-info">
+            <div class="landing-project-name">HydroBot 3000</div>
+            <div class="landing-project-desc">Underwater ROV with 6-axis motion control, HD cameras, and real-time telemetry for marine exploration. C++ + Electronics.</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.75rem;flex-shrink:0">
+            <span class="chip chip-green">Active</span>
+            <div class="landing-project-progress-wrap">
+              <div class="landing-project-progress-label">55%</div>
+              <div class="landing-project-bar"><div class="landing-project-fill" style="width:55%;background:var(--blue)"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="landing-project-row reveal reveal-delay-2" onclick="launchApp();navigateTo('projects')">
+          <div class="landing-project-emoji">🦾</div>
+          <div class="landing-project-info">
+            <div class="landing-project-name">AI Sorting Arm</div>
+            <div class="landing-project-desc">Robotic arm with ML-powered sorting using YOLOv8 for real-time object detection. PyTorch + ROS integration.</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.75rem;flex-shrink:0">
+            <span class="chip chip-green">Active</span>
+            <div class="landing-project-progress-wrap">
+              <div class="landing-project-progress-label">40%</div>
+              <div class="landing-project-bar"><div class="landing-project-fill" style="width:40%"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="landing-project-row reveal reveal-delay-3" onclick="launchApp();navigateTo('projects')">
+          <div class="landing-project-emoji">💪</div>
+          <div class="landing-project-info">
+            <div class="landing-project-name">ExoArm Assist</div>
+            <div class="landing-project-desc">EMG-controlled assistive exoskeleton arm for rehabilitation with haptic feedback and adaptive learning.</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.75rem;flex-shrink:0">
+            <span class="chip chip-green">Active</span>
+            <div class="landing-project-progress-wrap">
+              <div class="landing-project-progress-label">88%</div>
+              <div class="landing-project-bar"><div class="landing-project-fill" style="width:88%;background:var(--green)"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- COMMUNITY -->
+  <section class="landing-section" id="community">
+    <div style="display:grid;grid-template-columns:1fr 440px;gap:5rem;align-items:center">
+      <div>
+        <div class="section-eyebrow">
+          <div class="section-eyebrow-line"></div>
+          <span class="t-label">The people</span>
+        </div>
+        <h2 style="font-family:var(--font-serif);font-size:2rem;letter-spacing:-0.02em;line-height:1.1;margin:.75rem 0 1rem">Students, mentors, designers, builders.</h2>
+        <p style="font-size:.9375rem;color:var(--text-2);line-height:1.65;max-width:480px;margin-bottom:2rem">
+          Whatever your role — first-year student or seasoned engineer — there's a place for you here. Build your reputation, find a team, or mentor the next generation.
+        </p>
+        <button class="btn btn-primary" onclick="launchApp();navigateTo('profiles')">Meet the community →</button>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:.625rem">
+        <div style="display:flex;gap:.75rem;align-items:center;padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;transition:box-shadow .2s ease" onmouseenter="this.style.boxShadow='0 4px 16px rgba(0,0,0,.08)'" onmouseleave="this.style.boxShadow=''">
+          <div style="width:44px;height:44px;border-radius:50%;background:#2563eb;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.8rem;flex-shrink:0">SP</div>
+          <div style="flex:1">
+            <div style="font-weight:600;font-size:.875rem;color:var(--text-1)">Sam Patel <span style="font-size:.75rem;color:var(--green);font-weight:500;margin-left:.4rem">● online</span></div>
+            <div style="font-size:.75rem;color:var(--text-3)">CMU · Mentor &amp; Director · AI/ML Engineer</div>
+          </div>
+          <div style="display:flex;gap:.25rem">
+            <span style="font-size:.7rem;padding:.15rem .5rem;border-radius:4px;background:var(--accent-dim);color:var(--accent);font-weight:500">6,200 pts</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:.75rem;align-items:center;padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;transition:box-shadow .2s ease" onmouseenter="this.style.boxShadow='0 4px 16px rgba(0,0,0,.08)'" onmouseleave="this.style.boxShadow=''">
+          <div style="width:44px;height:44px;border-radius:50%;background:#16a34a;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.8rem;flex-shrink:0">MR</div>
+          <div style="flex:1">
+            <div style="font-weight:600;font-size:.875rem;color:var(--text-1)">Maya Rodriguez <span style="font-size:.75rem;color:var(--green);font-weight:500;margin-left:.4rem">● online</span></div>
+            <div style="font-size:.75rem;color:var(--text-3)">Stanford · Builder · Electronics &amp; PCB Design</div>
+          </div>
+          <div style="font-size:.7rem;padding:.15rem .5rem;border-radius:4px;background:var(--blue-bg);color:var(--blue);font-weight:500">3,920 pts</div>
+        </div>
+        <div style="display:flex;gap:.75rem;align-items:center;padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;transition:box-shadow .2s ease" onmouseenter="this.style.boxShadow='0 4px 16px rgba(0,0,0,.08)'" onmouseleave="this.style.boxShadow=''">
+          <div style="width:44px;height:44px;border-radius:50%;background:#7c3aed;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.8rem;flex-shrink:0">JK</div>
+          <div style="flex:1">
+            <div style="font-weight:600;font-size:.875rem;color:var(--text-1)">Jordan Kim <span style="font-size:.75rem;color:var(--text-3);margin-left:.4rem">● 2h ago</span></div>
+            <div style="font-size:.75rem;color:var(--text-3)">CalTech · Designer · SolidWorks &amp; FEA</div>
+          </div>
+          <div style="font-size:.7rem;padding:.15rem .5rem;border-radius:4px;background:var(--bg-2);color:var(--text-2);font-weight:500;border:1px solid var(--border)">3,540 pts</div>
+        </div>
+        <div style="display:flex;gap:.75rem;align-items:center;padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;transition:box-shadow .2s ease" onmouseenter="this.style.boxShadow='0 4px 16px rgba(0,0,0,.08)'" onmouseleave="this.style.boxShadow=''">
+          <div style="width:44px;height:44px;border-radius:50%;background:#e55b2d;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.8rem;flex-shrink:0">AC</div>
+          <div style="flex:1">
+            <div style="font-weight:600;font-size:.875rem;color:var(--text-1)">Alex Chen <span style="font-size:.75rem;color:var(--green);font-weight:500;margin-left:.4rem">● online</span></div>
+            <div style="font-size:.75rem;color:var(--text-3)">MIT · Team Lead · Python, ROS2, ML</div>
+          </div>
+          <div style="font-size:.7rem;padding:.15rem .5rem;border-radius:4px;background:var(--accent-dim);color:var(--accent);font-weight:500">4,850 pts</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="about">
+    <div style="max-width:var(--content-max);margin:0 auto">
+      <span class="t-label">Get started</span>
+      <h2 class="cta-heading">Built by builders,<br>for <em>builders.</em></h2>
+      <p class="cta-body">We built this platform because we needed it. One place for the whole team — from first sketch to competition day. Join free and start building.</p>
+      <div class="cta-actions">
+        <button class="btn btn-white btn-lg" onclick="launchApp()">Open the studio →</button>
+        <button class="btn btn-white-outline btn-lg" onclick="launchApp();navigateTo('about')">Read our story</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="nav-wordmark">
+        <div class="nav-logo-sq">🤖</div>
+        <span class="nav-wordmark-text">Build Robotics Studio</span>
+      </div>
+      <span style="font-size:.75rem;color:var(--text-3)">© 2026 Build Robotics Studio. Made with care for the builder community.</span>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#" onclick="launchApp();navigateTo('about');return false">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /landing-page -->
+
+<!-- ======================================================
+     APP
+     ====================================================== -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <aside class="app-sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-wordmark">
+        <div class="sidebar-logo-sq">🤖</div>
+        <span class="sidebar-name">Build Robotics</span>
+      </div>
+    </div>
+
+    <div class="sidebar-nav-wrap">
+      <div class="sidebar-section-label">Main</div>
+      <button class="sidebar-nav-item active" data-page="dashboard" onclick="navigateTo('dashboard')">
+        <span class="sidebar-item-icon">⊞</span> Dashboard
+      </button>
+      <button class="sidebar-nav-item" data-page="projects" onclick="navigateTo('projects')">
+        <span class="sidebar-item-icon">◈</span> Projects
+        <span class="sidebar-item-badge green">6</span>
+      </button>
+      <button class="sidebar-nav-item" data-page="profiles" onclick="navigateTo('profiles')">
+        <span class="sidebar-item-icon">◉</span> Members
+      </button>
+
+      <div class="sidebar-section-label">Collaborate</div>
+      <button class="sidebar-nav-item" data-page="chat" onclick="navigateTo('chat')">
+        <span class="sidebar-item-icon">◻</span> Chat
+        <span class="sidebar-item-badge">3</span>
+      </button>
+      <button class="sidebar-nav-item" data-page="calendar" onclick="navigateTo('calendar')">
+        <span class="sidebar-item-icon">◷</span> Calendar
+      </button>
+
+      <div class="sidebar-section-label">Grow</div>
+      <button class="sidebar-nav-item" data-page="resources" onclick="navigateTo('resources')">
+        <span class="sidebar-item-icon">▦</span> Resources
+      </button>
+      <button class="sidebar-nav-item" data-page="leaderboard" onclick="navigateTo('leaderboard')">
+        <span class="sidebar-item-icon">◆</span> Leaderboard
+      </button>
+
+      <div class="sidebar-section-label">Studio</div>
+      <button class="sidebar-nav-item" data-page="about" onclick="navigateTo('about')">
+        <span class="sidebar-item-icon">○</span> About
+      </button>
+      <button class="sidebar-nav-item" onclick="showLanding()">
+        <span class="sidebar-item-icon">←</span> Back to site
+      </button>
+    </div>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user-row" onclick="openProfile(1)">
+        <div class="sidebar-avatar" style="background:#e55b2d">AC</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Alex Chen</div>
+          <div class="sidebar-user-sub">Team Lead · 4,850 pts</div>
+        </div>
+        <span style="color:var(--dark-text-3);font-size:.875rem">⋯</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="app-main">
+
+    <!-- TOPBAR -->
+    <header class="app-topbar">
+      <button class="sidebar-toggle-btn" onclick="toggleSidebar()">☰</button>
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="topbar-search">
+        <span class="topbar-search-icon">⌕</span>
+        <input type="text" placeholder="Search projects, members, resources..." />
+      </div>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-actions">
+        <button class="icon-btn" onclick="openModal('new-project-modal')" title="New project" style="font-size:.75rem;font-weight:700">+ New</button>
+        <button class="icon-btn" onclick="toggleNotifications()" title="Notifications" id="notif-btn">
+          &#9741;
+          <div class="notif-pip" id="notif-pip"></div>
+        </button>
+        <div class="sidebar-avatar" style="background:#e55b2d;width:30px;height:30px;font-size:.6875rem;cursor:pointer" onclick="openProfile(1)">AC</div>
+      </div>
+    </header>
+
+    <!-- DASHBOARD -->
+    <div id="page-dashboard" class="app-page active">
+      <div class="dash-greeting">
+        <div class="dash-greeting-h">Good morning, <em style="font-style:italic;color:var(--accent)">Alex</em> 👋</div>
+        <div class="dash-greeting-sub">Here's what's been happening in the studio today.</div>
+      </div>
+
+      <!-- Stats -->
+      <div class="dash-stats">
+        <div class="dash-stat-item">
+          <div class="dash-stat-label">Active projects</div>
+          <div class="dash-stat-num count-up" data-target="6">6</div>
+          <div class="dash-stat-change up">↑ 2 this month</div>
+        </div>
+        <div class="dash-stat-item">
+          <div class="dash-stat-label">Community members</div>
+          <div class="dash-stat-num count-up" data-target="247">247</div>
+          <div class="dash-stat-change up">↑ 12 this week</div>
+        </div>
+        <div class="dash-stat-item">
+          <div class="dash-stat-label">Your points</div>
+          <div class="dash-stat-num count-up" data-target="4850">4,850</div>
+          <div class="dash-stat-change up">↑ 150 today</div>
+        </div>
+        <div class="dash-stat-item">
+          <div class="dash-stat-label">Upcoming events</div>
+          <div class="dash-stat-num count-up" data-target="6">6</div>
+          <div class="dash-stat-change" style="color:var(--text-3)">Next in 3 days</div>
+        </div>
+      </div>
+
+      <!-- Dashboard Grid -->
+      <div class="dash-grid">
+
+        <!-- Projects -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Your Projects</span>
+            <button class="btn btn-ghost btn-sm" onclick="navigateTo('projects')">View all</button>
+          </div>
+          <div class="card-body">
+            <div class="proj-mini-row" onclick="navigateTo('projects')">
+              <div class="proj-mini-icon">🤖</div>
+              <div class="proj-mini-info">
+                <div class="proj-mini-name">Autonomous Pathfinder</div>
+                <div class="proj-mini-sub">3 members · Updated 2h ago</div>
+                <div class="proj-mini-progress">
+                  <div class="proj-mini-pct">72%</div>
+                  <div class="prog-bar"><div class="prog-fill" data-width="72%" style="width:0"></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="proj-mini-row" onclick="navigateTo('projects')">
+              <div class="proj-mini-icon">🌊</div>
+              <div class="proj-mini-info">
+                <div class="proj-mini-name">HydroBot 3000</div>
+                <div class="proj-mini-sub">3 members · Updated 4h ago</div>
+                <div class="proj-mini-progress">
+                  <div class="proj-mini-pct">55%</div>
+                  <div class="prog-bar"><div class="prog-fill blue" data-width="55%" style="width:0"></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="proj-mini-row" onclick="navigateTo('projects')">
+              <div class="proj-mini-icon">🦾</div>
+              <div class="proj-mini-info">
+                <div class="proj-mini-name">AI Sorting Arm</div>
+                <div class="proj-mini-sub">3 members · Updated 1d ago</div>
+                <div class="proj-mini-progress">
+                  <div class="proj-mini-pct">40%</div>
+                  <div class="prog-bar"><div class="prog-fill" data-width="40%" style="width:0"></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="proj-mini-row" onclick="navigateTo('projects')">
+              <div class="proj-mini-icon">💪</div>
+              <div class="proj-mini-info">
+                <div class="proj-mini-name">ExoArm Assist</div>
+                <div class="proj-mini-sub">4 members · Updated 6h ago</div>
+                <div class="proj-mini-progress">
+                  <div class="proj-mini-pct">88%</div>
+                  <div class="prog-bar"><div class="prog-fill green" data-width="88%" style="width:0"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming Events -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Upcoming Events</span>
+            <button class="btn btn-ghost btn-sm" onclick="navigateTo('calendar')">Calendar</button>
+          </div>
+          <div class="card-body">
+            <div class="event-row" onclick="navigateTo('calendar')">
+              <div class="event-date-col">
+                <div class="event-date-d">3</div>
+                <div class="event-date-m">Apr</div>
+              </div>
+              <div>
+                <div class="event-title">Python &amp; ROS2 Workshop</div>
+                <div class="event-meta">Online · 2:00 PM EDT <span class="chip chip-blue" style="margin-left:.4rem">Workshop</span></div>
+              </div>
+            </div>
+            <div class="event-row" onclick="navigateTo('calendar')">
+              <div class="event-date-col">
+                <div class="event-date-d">8</div>
+                <div class="event-date-m">Apr</div>
+              </div>
+              <div>
+                <div class="event-title">Circuit Design Sprint</div>
+                <div class="event-meta">48hr challenge · All levels <span class="chip chip-green" style="margin-left:.4rem">Challenge</span></div>
+              </div>
+            </div>
+            <div class="event-row" onclick="navigateTo('calendar')">
+              <div class="event-date-col">
+                <div class="event-date-d">12</div>
+                <div class="event-date-m">Apr</div>
+              </div>
+              <div>
+                <div class="event-title">Regional Robotics Championship</div>
+                <div class="event-meta">Register by Apr 5 <span class="chip chip-accent" style="margin-left:.4rem">Competition</span></div>
+              </div>
+            </div>
+            <div class="event-row" onclick="navigateTo('calendar')">
+              <div class="event-date-col">
+                <div class="event-date-d">25</div>
+                <div class="event-date-m">Apr</div>
+              </div>
+              <div>
+                <div class="event-title">Spring Showcase Demo Day</div>
+                <div class="event-meta">Industry judges · Public <span class="chip chip-accent" style="margin-left:.4rem">Competition</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity Feed -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Live Activity</span>
+            <span class="chip chip-green" style="font-size:.625rem">
+              <span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block"></span>
+              47 online
+            </span>
+          </div>
+          <div class="card-body" id="activity-feed">
+            <div class="activity-row">
+              <div class="activity-icon" style="background:#16a34a">MR</div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>Maya Rodriguez</strong> uploaded a CAD file to <strong>HydroBot 3000</strong></div>
+                <div class="activity-time">2 minutes ago</div>
+              </div>
+            </div>
+            <div class="activity-row">
+              <div class="activity-icon" style="background:#2563eb">SP</div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>Sam Patel</strong> left feedback on <strong>AI Sorting Arm</strong> — mAP jumped to 81%!</div>
+                <div class="activity-time">15 minutes ago</div>
+              </div>
+            </div>
+            <div class="activity-row">
+              <div class="activity-icon" style="background:#7c3aed">RZ</div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>Riley Zhang</strong> joined the <strong>SwarmBots</strong> project</div>
+                <div class="activity-time">34 minutes ago</div>
+              </div>
+            </div>
+            <div class="activity-row">
+              <div class="activity-icon" style="background:#7c3aed">JK</div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>Jordan Kim</strong> posted a resource: <strong>Fusion360 for Robotics</strong></div>
+                <div class="activity-time">1 hour ago</div>
+              </div>
+            </div>
+            <div class="activity-row">
+              <div class="activity-icon" style="background:#e55b2d">AC</div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>Alex Chen</strong> completed task: "Implement SLAM localization" ✓</div>
+                <div class="activity-time">2 hours ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PROJECTS -->
+    <div id="page-projects" class="app-page">
+      <div class="page-header">
+        <div class="page-header-left">
+          <div class="page-title">Project Hub</div>
+          <div class="page-sub">Explore, join, or start robotics projects</div>
+        </div>
+        <button class="btn btn-accent" onclick="openModal('new-project-modal')">+ New project</button>
+      </div>
+
+      <div class="projects-filter-bar" id="projects-filter-bar">
+        <button class="filter-tab active" data-filter="all" onclick="filterProjects('all')">All</button>
+        <button class="filter-tab" data-filter="active" onclick="filterProjects('active')">Active</button>
+        <button class="filter-tab" data-filter="planning" onclick="filterProjects('planning')">Planning</button>
+        <button class="filter-tab" data-filter="completed" onclick="filterProjects('completed')">Completed</button>
+        <button class="filter-tab" data-filter="autonomous" onclick="filterProjects('autonomous')">Autonomous</button>
+        <button class="filter-tab" data-filter="ai" onclick="filterProjects('ai')">AI / ML</button>
+        <button class="filter-tab" data-filter="mechanical" onclick="filterProjects('mechanical')">Mechanical</button>
+      </div>
+
+      <div class="projects-grid" id="projects-grid"></div>
+    </div>
+
+    <!-- PROFILES -->
+    <div id="page-profiles" class="app-page">
+      <div class="page-header">
+        <div class="page-header-left">
+          <div class="page-title">Community Members</div>
+          <div class="page-sub">247 members · <span style="color:var(--green)">47 online now</span></div>
+        </div>
+        <div style="display:flex;gap:.375rem;flex-wrap:wrap">
+          <button class="filter-tab active" onclick="filterProfilesBy('all');this.closest('.page-header').querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">All</button>
+          <button class="filter-tab" onclick="filterProfilesBy('mentor');this.closest('.page-header').querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Mentors</button>
+          <button class="filter-tab" onclick="filterProfilesBy('lead');this.closest('.page-header').querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Leads</button>
+          <button class="filter-tab" onclick="filterProfilesBy('builder');this.closest('.page-header').querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Builders</button>
+        </div>
+      </div>
+      <div class="profiles-grid" id="profiles-grid"></div>
+    </div>
+
+    <!-- CHAT -->
+    <div id="page-chat" class="app-page" style="padding:1rem">
+      <div class="chat-shell">
+        <div class="chat-left">
+          <div class="chat-left-header">
+            <div class="chat-left-title">Channels</div>
+          </div>
+
+          <div class="chat-room-row active" data-room="general" onclick="switchChatRoom('general')">
+            <div class="chat-room-icon-sq">#</div>
+            <div class="chat-room-info">
+              <div class="chat-room-name">general</div>
+              <div class="chat-room-last">Alex: No crashes! 🎉</div>
+            </div>
+          </div>
+          <div class="chat-room-row" data-room="ai-team" onclick="switchChatRoom('ai-team')">
+            <div class="chat-room-icon-sq">#</div>
+            <div class="chat-room-info">
+              <div class="chat-room-name">ai-team</div>
+              <div class="chat-room-last">Sam: mAP jumped to 81%!</div>
+            </div>
+            <span class="chat-room-badge">2</span>
+          </div>
+          <div class="chat-room-row" data-room="mechanical" onclick="switchChatRoom('mechanical')">
+            <div class="chat-room-icon-sq">#</div>
+            <div class="chat-room-info">
+              <div class="chat-room-name">mechanical</div>
+              <div class="chat-room-last">Jordan: Reduced weight by 400g</div>
+            </div>
+            <span class="chat-room-badge">1</span>
+          </div>
+          <div class="chat-room-row" data-room="mentors" onclick="switchChatRoom('mentors')">
+            <div class="chat-room-icon-sq" style="background:var(--accent-dim);color:var(--accent)">★</div>
+            <div class="chat-room-info">
+              <div class="chat-room-name">mentors</div>
+              <div class="chat-room-last">Sam: All teams on track!</div>
+            </div>
+          </div>
+
+          <div style="padding:.625rem 1rem .375rem;font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)">Direct Messages</div>
+
+          <div class="chat-room-row" data-room="dm-maya" onclick="switchChatRoom('dm-maya')">
+            <div class="sidebar-avatar" style="background:#16a34a;width:34px;height:34px;font-size:.6875rem;border-radius:8px">MR</div>
+            <div class="chat-room-info">
+              <div class="chat-room-name">Maya Rodriguez <span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;margin-left:.3rem;margin-bottom:1px"></span></div>
+              <div class="chat-room-last">Let's sync on the thruster</div>
+            </div>
+          </div>
+          <div class="chat-room-row" data-room="dm-jordan" onclick="switchChatRoom('dm-jordan')">
+            <div class="sidebar-avatar" style="background:#7c3aed;width:34px;height:34px;font-size:.6875rem;border-radius:8px">JK</div>
+            <div class="chat-room-info">
+              <div class="chat-room-name">Jordan Kim</div>
+              <div class="chat-room-last">Check the updated CAD file</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-right">
+          <div class="chat-right-header">
+            <div>
+              <div class="chat-right-title" id="chat-room-name"># general</div>
+              <div class="chat-right-meta">General discussion for all studio members · 247 members</div>
+            </div>
+            <div style="display:flex;gap:.25rem">
+              <button class="icon-btn btn-ghost" style="font-size:.75rem">📌</button>
+              <button class="icon-btn btn-ghost" style="font-size:.75rem">👥</button>
+            </div>
+          </div>
+
+          <div class="chat-messages-list" id="chat-messages"></div>
+
+          <div class="chat-input-bar">
+            <div class="chat-input-wrap">
+              <textarea class="chat-textarea" id="chat-input" rows="1" placeholder="Message #general..."></textarea>
+              <button class="chat-send-btn" onclick="sendMessage()">↑</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALENDAR -->
+    <div id="page-calendar" class="app-page">
+      <div class="page-header">
+        <div class="page-header-left">
+          <div class="page-title">Calendar</div>
+          <div class="page-sub">Competitions, workshops &amp; challenges</div>
+        </div>
+        <button class="btn btn-accent">+ Add event</button>
+      </div>
+
+      <div class="calendar-layout">
+        <div class="cal-grid">
+          <div class="cal-grid-header">
+            <span class="cal-month-title" id="cal-month">April 2026</span>
+            <div class="cal-nav">
+              <button class="cal-nav-btn" onclick="changeMonth(-1)">◀</button>
+              <button class="cal-nav-btn" onclick="changeMonth(1)">▶</button>
+            </div>
+          </div>
+          <div class="cal-day-headers">
+            <div class="cal-day-header-cell">Sun</div>
+            <div class="cal-day-header-cell">Mon</div>
+            <div class="cal-day-header-cell">Tue</div>
+            <div class="cal-day-header-cell">Wed</div>
+            <div class="cal-day-header-cell">Thu</div>
+            <div class="cal-day-header-cell">Fri</div>
+            <div class="cal-day-header-cell">Sat</div>
+          </div>
+          <div id="calendar-cells" class="cal-cells"></div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div class="card">
+            <div class="card-header"><span class="card-title">All Events</span></div>
+            <div class="card-body" style="padding:.625rem 1rem">
+              <div class="event-row" onclick="navigateTo('calendar')">
+                <div class="event-date-col"><div class="event-date-d">3</div><div class="event-date-m">Apr</div></div>
+                <div><div class="event-title">Python &amp; ROS2 Workshop</div><div class="event-meta">2:00 PM · Online</div></div>
+              </div>
+              <div class="event-row">
+                <div class="event-date-col"><div class="event-date-d">8</div><div class="event-date-m">Apr</div></div>
+                <div><div class="event-title">Circuit Design Sprint</div><div class="event-meta">48hr Challenge</div></div>
+              </div>
+              <div class="event-row">
+                <div class="event-date-col"><div class="event-date-d">12</div><div class="event-date-m">Apr</div></div>
+                <div><div class="event-title">Regional Championship</div><div class="event-meta">Register by Apr 5</div></div>
+              </div>
+              <div class="event-row">
+                <div class="event-date-col"><div class="event-date-d">18</div><div class="event-date-m">Apr</div></div>
+                <div><div class="event-title">Computer Vision Bootcamp</div><div class="event-meta">Workshop · All day</div></div>
+              </div>
+              <div class="event-row" style="border-bottom:none">
+                <div class="event-date-col"><div class="event-date-d">25</div><div class="event-date-m">Apr</div></div>
+                <div><div class="event-title">Spring Showcase Demo Day</div><div class="event-meta">Industry judges</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><span class="card-title">Your RSVPs</span></div>
+            <div class="card-body">
+              <p style="font-size:.8125rem;color:var(--text-3);margin-bottom:.75rem">You're registered for 2 events</p>
+              <div style="display:flex;align-items:center;gap:.625rem;padding:.5rem 0;border-bottom:1px solid var(--border)">
+                <span class="chip chip-accent">Comp</span>
+                <span style="font-size:.8125rem">Regional Championship</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:.625rem;padding:.5rem 0">
+                <span class="chip chip-accent">Demo</span>
+                <span style="font-size:.8125rem">Spring Showcase</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESOURCES -->
+    <div id="page-resources" class="app-page">
+      <div class="page-header">
+        <div class="page-header-left">
+          <div class="page-title">Resource Library</div>
+          <div class="page-sub">Tutorials, guides, and templates from the community</div>
+        </div>
+        <button class="btn btn-accent">+ Contribute</button>
+      </div>
+
+      <div class="resources-layout">
+        <div class="resources-sidebar-nav">
+          <div style="font-size:.6875rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3);padding:.25rem .625rem .625rem;margin-bottom:.25rem">Topics</div>
+          <div class="res-cat active" data-topic="all" onclick="filterResources('all')">📂 All</div>
+          <div class="res-cat" data-topic="software" onclick="filterResources('software')">💻 Software</div>
+          <div class="res-cat" data-topic="mechanical" onclick="filterResources('mechanical')">⚙️ Mechanical</div>
+          <div class="res-cat" data-topic="electronics" onclick="filterResources('electronics')">⚡ Electronics</div>
+          <div class="res-cat" data-topic="ai" onclick="filterResources('ai')">🧠 AI / ML</div>
+          <div class="res-cat" data-topic="firmware" onclick="filterResources('firmware')">🔧 Firmware</div>
+          <div class="divider"></div>
+          <div style="font-size:.6875rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3);padding:.25rem .625rem .625rem">Level</div>
+          <div class="res-cat" onclick="">🌱 Beginner</div>
+          <div class="res-cat" onclick="">⚡ Intermediate</div>
+          <div class="res-cat" onclick="">🔥 Advanced</div>
+        </div>
+        <div class="resources-grid" id="resources-grid"></div>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div id="page-leaderboard" class="app-page">
+      <div class="page-header">
+        <div class="page-header-left">
+          <div class="page-title">Leaderboard</div>
+          <div class="page-sub">Top contributors this month</div>
+        </div>
+        <div style="display:flex;gap:.375rem">
+          <button class="filter-tab active">This month</button>
+          <button class="filter-tab">All time</button>
+        </div>
+      </div>
+
+      <div class="leaderboard-layout">
+        <div>
+          <!-- Podium -->
+          <div style="display:flex;justify-content:center;align-items:flex-end;gap:1.5rem;margin-bottom:2rem;padding:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:12px">
+            <div style="text-align:center">
+              <div class="sidebar-avatar" style="background:#16a34a;width:52px;height:52px;font-size:.9rem;margin:0 auto .75rem">MR</div>
+              <div style="font-size:.8125rem;font-weight:600">Maya Rodriguez</div>
+              <div style="font-family:var(--font-mono);font-size:.6875rem;color:var(--text-3)">3,920 pts</div>
+              <div style="font-family:var(--font-serif);font-size:1.5rem;color:#9ca3af;margin-top:.25rem">2</div>
+              <div style="height:64px;width:72px;background:var(--bg-2);border-radius:6px 6px 0 0;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:1.25rem;border:1px solid var(--border)">🥈</div>
+            </div>
+            <div style="text-align:center">
+              <div class="sidebar-avatar" style="background:#2563eb;width:60px;height:60px;font-size:1rem;margin:0 auto .75rem;box-shadow:0 0 0 3px var(--surface),0 0 0 4px #d97706">SP</div>
+              <div style="font-size:.875rem;font-weight:700">Sam Patel</div>
+              <div style="font-family:var(--font-mono);font-size:.6875rem;color:var(--text-3)">6,200 pts</div>
+              <div style="font-family:var(--font-serif);font-size:2rem;color:#d97706;margin-top:.25rem">1</div>
+              <div style="height:88px;width:72px;background:rgba(217,119,6,.08);border-radius:6px 6px 0 0;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:1.5rem;border:1px solid rgba(217,119,6,.2)">👑</div>
+            </div>
+            <div style="text-align:center">
+              <div class="sidebar-avatar" style="background:#7c3aed;width:52px;height:52px;font-size:.9rem;margin:0 auto .75rem">JK</div>
+              <div style="font-size:.8125rem;font-weight:600">Jordan Kim</div>
+              <div style="font-family:var(--font-mono);font-size:.6875rem;color:var(--text-3)">3,540 pts</div>
+              <div style="font-family:var(--font-serif);font-size:1.5rem;color:#b45309;margin-top:.25rem">3</div>
+              <div style="height:48px;width:72px;background:var(--bg-2);border-radius:6px 6px 0 0;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:1rem;border:1px solid var(--border)">🥉</div>
+            </div>
+          </div>
+
+          <div class="lb-table">
+            <div class="lb-row header">
+              <span class="t-label">Rank</span>
+              <span class="t-label">Member</span>
+              <span class="t-label">Badges</span>
+              <span class="t-label">Points</span>
+              <span class="t-label">Change</span>
+            </div>
+            <div class="lb-row" onclick="openProfile(4)" style="border-left:3px solid #d97706">
+              <span class="lb-rank gold">1</span>
+              <div class="lb-user">
+                <div class="sidebar-avatar" style="background:#2563eb;width:32px;height:32px;font-size:.7rem">SP</div>
+                <div><div class="lb-user-name">Sam Patel</div><div class="lb-user-school">CMU · Mentor</div></div>
+              </div>
+              <div class="lb-badges-cell">
+                <span class="lb-badge-sm">🏆</span><span class="lb-badge-sm">👑</span><span class="lb-badge-sm">⚡</span>
+              </div>
+              <span class="lb-points">6,200</span>
+              <span class="lb-change up">↑ 420</span>
+            </div>
+            <div class="lb-row" onclick="openProfile(2)">
+              <span class="lb-rank silver">2</span>
+              <div class="lb-user">
+                <div class="sidebar-avatar" style="background:#16a34a;width:32px;height:32px;font-size:.7rem">MR</div>
+                <div><div class="lb-user-name">Maya Rodriguez</div><div class="lb-user-school">Stanford · Builder</div></div>
+              </div>
+              <div class="lb-badges-cell">
+                <span class="lb-badge-sm">⚡</span><span class="lb-badge-sm">🔥</span><span class="lb-badge-sm">🎯</span>
+              </div>
+              <span class="lb-points">3,920</span>
+              <span class="lb-change up">↑ 280</span>
+            </div>
+            <div class="lb-row" onclick="openProfile(3)">
+              <span class="lb-rank bronze">3</span>
+              <div class="lb-user">
+                <div class="sidebar-avatar" style="background:#7c3aed;width:32px;height:32px;font-size:.7rem">JK</div>
+                <div><div class="lb-user-name">Jordan Kim</div><div class="lb-user-school">CalTech · Designer</div></div>
+              </div>
+              <div class="lb-badges-cell"><span class="lb-badge-sm">🎨</span><span class="lb-badge-sm">🔥</span></div>
+              <span class="lb-points">3,540</span>
+              <span class="lb-change up">↑ 190</span>
+            </div>
+            <div class="lb-row" onclick="openProfile(1)">
+              <span class="lb-rank">4</span>
+              <div class="lb-user">
+                <div class="sidebar-avatar" style="background:#e55b2d;width:32px;height:32px;font-size:.7rem">AC</div>
+                <div><div class="lb-user-name">Alex Chen</div><div class="lb-user-school">MIT · Team Lead</div></div>
+              </div>
+              <div class="lb-badges-cell"><span class="lb-badge-sm">🏆</span><span class="lb-badge-sm">🤖</span></div>
+              <span class="lb-points">4,850</span>
+              <span class="lb-change up">↑ 150</span>
+            </div>
+            <div class="lb-row" onclick="openProfile(6)">
+              <span class="lb-rank">5</span>
+              <div class="lb-user">
+                <div class="sidebar-avatar" style="background:#0891b2;width:32px;height:32px;font-size:.7rem">CM</div>
+                <div><div class="lb-user-name">Casey Morrison</div><div class="lb-user-school">UT Austin · Builder</div></div>
+              </div>
+              <div class="lb-badges-cell"><span class="lb-badge-sm">⚡</span></div>
+              <span class="lb-points">2,760</span>
+              <span class="lb-change down">↓ 20</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div class="card">
+            <div class="card-header"><span class="card-title">Badges</span></div>
+            <div class="card-body" style="padding:.875rem">
+              <div class="badges-grid">
+                <div class="badge-item"><span class="badge-icon-lg">🏆</span><div class="badge-name-sm">Champion</div></div>
+                <div class="badge-item"><span class="badge-icon-lg">⚡</span><div class="badge-name-sm">Spark</div></div>
+                <div class="badge-item"><span class="badge-icon-lg">🔥</span><div class="badge-name-sm">On Fire</div></div>
+                <div class="badge-item"><span class="badge-icon-lg">🎯</span><div class="badge-name-sm">Sharp</div></div>
+                <div class="badge-item"><span class="badge-icon-lg">🤖</span><div class="badge-name-sm">Builder</div></div>
+                <div class="badge-item locked"><span class="badge-icon-lg">👑</span><div class="badge-name-sm">Leader</div></div>
+                <div class="badge-item locked"><span class="badge-icon-lg">📚</span><div class="badge-name-sm">Scholar</div></div>
+                <div class="badge-item locked"><span class="badge-icon-lg">💡</span><div class="badge-name-sm">Inventor</div></div>
+                <div class="badge-item locked"><span class="badge-icon-lg">🚀</span><div class="badge-name-sm">Launcher</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><span class="card-title">Your Skills</span></div>
+            <div class="card-body">
+              <div class="skill-bar-item">
+                <div class="skill-bar-header"><span class="skill-bar-label">Python / ROS2</span><span class="skill-bar-pct">92%</span></div>
+                <div class="skill-bar-track"><div class="skill-bar-fill" data-width="92%"></div></div>
+              </div>
+              <div class="skill-bar-item">
+                <div class="skill-bar-header"><span class="skill-bar-label">Machine Learning</span><span class="skill-bar-pct">85%</span></div>
+                <div class="skill-bar-track"><div class="skill-bar-fill" data-width="85%"></div></div>
+              </div>
+              <div class="skill-bar-item">
+                <div class="skill-bar-header"><span class="skill-bar-label">CAD / Fusion360</span><span class="skill-bar-pct">70%</span></div>
+                <div class="skill-bar-track"><div class="skill-bar-fill" data-width="70%"></div></div>
+              </div>
+              <div class="skill-bar-item" style="margin-bottom:0">
+                <div class="skill-bar-header"><span class="skill-bar-label">Electronics</span><span class="skill-bar-pct">60%</span></div>
+                <div class="skill-bar-track"><div class="skill-bar-fill" data-width="60%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div id="page-about" class="app-page">
+      <div class="about-hero">
+        <span class="t-label">Our story</span>
+        <h1 class="about-hero-h">Built for builders,<br>by <em>builders.</em></h1>
+        <p style="font-size:.9375rem;color:var(--text-2);line-height:1.7;max-width:560px">
+          Build Robotics Studio was founded by a small group of engineers who wanted one place to collaborate, learn, and compete together. We believe robotics education should be open, community-driven, and genuinely fun.
+        </p>
+      </div>
+
+      <div style="margin-bottom:2.5rem">
+        <div style="font-size:.8125rem;font-weight:600;color:var(--text-1);margin-bottom:1rem">Mission &amp; values</div>
+        <div class="mission-cards">
+          <div class="mission-card">
+            <div class="mission-card-label">Mission</div>
+            <div class="mission-card-body">Democratize robotics education by providing a collaborative platform where anyone — from curious beginners to experienced engineers — can build, learn, and grow together.</div>
+          </div>
+          <div class="mission-card">
+            <div class="mission-card-label">Vision</div>
+            <div class="mission-card-body">A world where the next generation of roboticists has every resource, connection, and opportunity they need to build robots that change the world for the better.</div>
+          </div>
+          <div class="mission-card">
+            <div class="mission-card-label">Values</div>
+            <div class="mission-card-body">Open collaboration. Radical inclusion. Learning in public. Shipping real things. Celebrating failure as a necessary step on the way to success.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:2.5rem">
+        <div style="font-size:.8125rem;font-weight:600;color:var(--text-1);margin-bottom:1rem">Leadership team</div>
+        <div class="team-grid">
+          <div class="team-card" onclick="openProfile(4)">
+            <div class="team-av" style="background:#2563eb">SP</div>
+            <div class="team-name">Sam Patel</div>
+            <div class="team-role">Director &amp; Lead Mentor</div>
+            <div class="team-school">CMU · AI/ML Engineer</div>
+          </div>
+          <div class="team-card" onclick="openProfile(1)">
+            <div class="team-av" style="background:#e55b2d">AC</div>
+            <div class="team-name">Alex Chen</div>
+            <div class="team-role">Technical Lead</div>
+            <div class="team-school">MIT · Robotics Engineer</div>
+          </div>
+          <div class="team-card" onclick="openProfile(2)">
+            <div class="team-av" style="background:#16a34a">MR</div>
+            <div class="team-name">Maya Rodriguez</div>
+            <div class="team-role">Hardware Lead</div>
+            <div class="team-school">Stanford · Electronics</div>
+          </div>
+          <div class="team-card" onclick="openProfile(3)">
+            <div class="team-av" style="background:#7c3aed">JK</div>
+            <div class="team-name">Jordan Kim</div>
+            <div class="team-role">Design Lead</div>
+            <div class="team-school">CalTech · Mechanical</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-padded" style="text-align:center;padding:2.5rem">
+        <div style="font-size:1.5rem;margin-bottom:.75rem">📬</div>
+        <div style="font-family:var(--font-serif);font-size:1.375rem;letter-spacing:-0.015em;margin-bottom:.625rem">Want to work with us?</div>
+        <p style="font-size:.875rem;color:var(--text-2);max-width:400px;margin:0 auto 1.75rem;line-height:1.6">Mentorship, sponsorship, or partnership opportunities. We'd love to hear from you.</p>
+        <div style="display:flex;gap:.625rem;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-accent" onclick="showToast('info','Email','Opening your email client...')">✉ hello@buildrobotics.studio</button>
+          <button class="btn btn-outline" onclick="showToast('info','Discord','Opening Discord invite...')">Join our Discord</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /app-main -->
+</div><!-- /app -->
+
+<!-- ======================================================
+     NOTIFICATIONS
+     ====================================================== -->
+<div id="notif-panel" class="notif-panel">
+  <div class="notif-panel-header">
+    <span class="notif-panel-title">Notifications</span>
+    <span class="notif-mark-read" onclick="markAllRead()">Mark all read</span>
+  </div>
+  <div class="notif-item unread">
+    <div class="notif-av" style="background:var(--accent-dim);font-size:1rem">💬</div>
+    <div><div class="notif-text"><strong>Alex Chen</strong> mentioned you in <strong>#general</strong></div><div class="notif-time">2m ago</div></div>
+  </div>
+  <div class="notif-item unread">
+    <div class="notif-av" style="background:var(--green-bg);font-size:1rem">✅</div>
+    <div><div class="notif-text">Task completed in <strong>Autonomous Pathfinder</strong></div><div class="notif-time">14m ago</div></div>
+  </div>
+  <div class="notif-item unread">
+    <div class="notif-av" style="background:var(--blue-bg);font-size:1rem">👋</div>
+    <div><div class="notif-text">New member <strong>Devon Wells</strong> joined the studio</div><div class="notif-time">1h ago</div></div>
+  </div>
+  <div class="notif-item">
+    <div class="notif-av" style="background:var(--amber-bg);font-size:1rem">📅</div>
+    <div><div class="notif-text">Reminder: <strong>Python &amp; ROS2 Workshop</strong> is tomorrow</div><div class="notif-time">2h ago</div></div>
+  </div>
+  <div class="notif-item">
+    <div class="notif-av" style="background:var(--accent-dim);font-size:1rem">🏅</div>
+    <div><div class="notif-text">You earned the <strong>Early Adopter</strong> badge ⚡</div><div class="notif-time">3h ago</div></div>
+  </div>
+</div>
+
+<!-- ======================================================
+     MODALS
+     ====================================================== -->
+
+<!-- New Project -->
+<div id="new-project-modal" class="modal-backdrop" onclick="if(event.target===this)closeModal('new-project-modal')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Create new project</span>
+      <button class="modal-close" onclick="closeModal('new-project-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Project name</label>
+        <input type="text" class="form-input" id="new-proj-name" placeholder="e.g. Autonomous Drone Swarm" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-textarea" id="new-proj-desc" placeholder="What are you building? What problem does it solve?"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-select" id="new-proj-category">
+          <option value="autonomous">Autonomous</option>
+          <option value="mechanical">Mechanical</option>
+          <option value="ai">AI / ML</option>
+          <option value="electronics">Electronics</option>
+          <option value="biotech">Biotech</option>
+          <option value="software">Software</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Team size</label>
+        <select class="form-select">
+          <option>Solo (just me)</option>
+          <option>Small (2–3 people)</option>
+          <option>Team (4–6 people)</option>
+          <option>Large (7+ people)</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('new-project-modal')">Cancel</button>
+      <button class="btn btn-accent" onclick="submitNewProject()">Create project</button>
+    </div>
+  </div>
+</div>
+
+<!-- Project Detail -->
+<div id="project-detail-modal" class="modal-backdrop" onclick="if(event.target===this)closeModal('project-detail-modal')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-proj-title">Project</span>
+      <button class="modal-close" onclick="closeModal('project-detail-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="text-align:center;margin-bottom:1.5rem">
+        <div id="modal-proj-emoji" style="font-size:3rem;margin-bottom:.75rem">🤖</div>
+        <span id="modal-proj-status"></span>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Description</div>
+        <div id="modal-proj-desc" style="font-size:.875rem;color:var(--text-2);line-height:1.65"></div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Tags</div>
+        <div id="modal-proj-tags" style="display:flex;gap:.375rem;flex-wrap:wrap"></div>
+      </div>
+      <div class="form-group">
+        <div style="display:flex;justify-content:space-between;margin-bottom:.5rem">
+          <span class="form-label" style="margin-bottom:0">Progress</span>
+          <span id="modal-proj-progress" style="font-family:var(--font-mono);font-size:.8125rem;color:var(--text-2)"></span>
+        </div>
+        <div class="prog-bar" style="height:6px">
+          <div id="modal-proj-progress-bar" class="prog-fill" style="width:0;transition:width 1s var(--ease-out)"></div>
+        </div>
+      </div>
+      <div>
+        <div class="form-label">Team</div>
+        <div id="modal-proj-members" style="display:flex;flex-direction:column;gap:.5rem"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('project-detail-modal')">Close</button>
+      <button class="btn btn-accent" onclick="showToast('success','Joined!','Welcome to the team!');closeModal('project-detail-modal')">Join project</button>
+    </div>
+  </div>
+</div>
+
+<!-- Event Modal -->
+<div id="event-modal" class="modal-backdrop" onclick="if(event.target===this)closeModal('event-modal')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-event-title">Event</span>
+      <button class="modal-close" onclick="closeModal('event-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:1rem">
+        <span id="modal-event-type" class="chip"></span>
+        <span id="modal-event-date" style="font-size:.8125rem;color:var(--text-3)"></span>
+      </div>
+      <p id="modal-event-desc" style="font-size:.875rem;color:var(--text-2);line-height:1.65;margin-bottom:1.25rem"></p>
+      <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center">
+        <div style="font-size:.8125rem;color:var(--text-2);margin-bottom:.25rem">RSVP to secure your spot</div>
+        <div style="font-size:.75rem;color:var(--text-3)">27 members already registered</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('event-modal')">Close</button>
+      <button class="btn btn-accent" onclick="rsvpEvent()">RSVP now</button>
+    </div>
+  </div>
+</div>
+
+<!-- Profile Modal -->
+<div id="profile-modal" class="modal-backdrop" onclick="if(event.target===this)closeModal('profile-modal')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Member profile</span>
+      <button class="modal-close" onclick="closeModal('profile-modal')">✕</button>
+    </div>
+    <div class="modal-body" style="text-align:center">
+      <div id="modal-profile-initials" class="sidebar-avatar" style="width:64px;height:64px;font-size:1.125rem;margin:0 auto 1rem"></div>
+      <h3 id="modal-profile-name" style="font-size:1.0625rem;font-weight:700;letter-spacing:-0.01em;margin-bottom:.25rem"></h3>
+      <span id="modal-profile-role" class="chip" style="margin-bottom:.5rem;display:inline-block"></span>
+      <div id="modal-profile-school" style="font-size:.8125rem;color:var(--text-3);margin-bottom:1.25rem"></div>
+      <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:.875rem;margin-bottom:1.25rem">
+        <div id="modal-profile-points" style="font-family:var(--font-serif);font-size:1.75rem;color:var(--text-1)"></div>
+        <div class="t-label" style="margin-top:.25rem">total points</div>
+      </div>
+      <div class="form-label" style="text-align:left">Skills</div>
+      <div id="modal-profile-skills" style="display:flex;flex-wrap:wrap;gap:.375rem;justify-content:center;margin-bottom:1.25rem"></div>
+      <div class="form-label" style="text-align:left">Badges</div>
+      <div id="modal-profile-badges" style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;font-size:1.5rem"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('profile-modal')">Close</button>
+      <button class="btn btn-accent" onclick="navigateTo('chat');closeModal('profile-modal');showToast('info','DM','Opening direct message...')">Message</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-stack" id="toast-container"></div>
+
+<!-- ======================================================
+     SCRIPTS
+     ====================================================== -->
+<script src="js/app.js"></script>
+<script>
+/* ---- Render Profiles ---- */
+function renderProfiles(filter) {
+  const grid = document.getElementById('profiles-grid');
+  if (!grid) return;
+  const data = !filter || filter === 'all' ? MOCK.users : MOCK.users.filter(u => u.role === filter);
+  const colors = { 1:'#e55b2d', 2:'#16a34a', 3:'#7c3aed', 4:'#2563eb', 5:'#0891b2', 6:'#d97706', 7:'#db2777', 8:'#64748b' };
+  grid.innerHTML = data.map(u => `
+    <div class="profile-card reveal" onclick="openProfile(${u.id})">
+      <div class="profile-av" style="background:${colors[u.id]||'#64748b'}">${u.initials}</div>
+      <div class="profile-name">${u.name}</div>
+      <div class="profile-school">${u.school} · <span class="chip chip-neutral" style="font-size:.625rem">${u.role}</span></div>
+      <div class="profile-skills">${u.skills.slice(0,4).map(s=>`<span class="profile-skill">${s}</span>`).join('')}</div>
+      <div class="profile-stats">
+        <div class="profile-stat"><span class="profile-stat-n">${u.points.toLocaleString()}</span><span class="profile-stat-l">Points</span></div>
+        <div class="profile-stat"><span class="profile-stat-n">${u.projects}</span><span class="profile-stat-l">Projects</span></div>
+        <div class="profile-stat"><span class="profile-stat-n">${u.badges.length}</span><span class="profile-stat-l">Badges</span></div>
+      </div>
+    </div>`).join('');
+  setTimeout(initScrollReveal, 80);
+}
+
+function filterProfilesBy(role) { renderProfiles(role); }
+
+/* ---- Render Resources ---- */
+function renderResources() {
+  const grid = document.getElementById('resources-grid');
+  if (!grid) return;
+  grid.innerHTML = MOCK.resources.map(r => `
+    <div class="resource-card reveal" data-topic="${r.topic}" onclick="showToast('info','Opening','Loading ${r.title}...')">
+      <div class="resource-type ${r.type}">${r.type.charAt(0).toUpperCase() + r.type.slice(1)} ${r.icon}</div>
+      <div class="resource-title">${r.title}</div>
+      <div class="resource-desc">${r.desc}</div>
+      <div class="resource-footer">
+        <span class="resource-level ${r.level}">${r.level}</span>
+        <span class="resource-views">${r.views.toLocaleString()} views</span>
+      </div>
+    </div>`).join('');
+  setTimeout(initScrollReveal, 80);
+}
+
+/* ---- Override navigateTo to also render page data ---- */
+const _origNavigateTo = navigateTo;
+navigateTo = function(page) {
+  _origNavigateTo(page);
+  if (page === 'profiles') renderProfiles('all');
+  if (page === 'resources') renderResources();
+  if (page === 'chat') setTimeout(() => renderMessages(state.currentChatRoom), 80);
+  if (page === 'calendar') renderCalendar();
+};
+
+/* ---- Animate landing preview bars on load ---- */
+function animateLandingPreview() {
+  document.querySelectorAll('.preview-project-fill[data-w]').forEach(el => {
+    setTimeout(() => { el.style.width = el.dataset.w; }, 800);
+  });
+}
+
+/* ---- Init ---- */
+setTimeout(() => {
+  renderProfiles('all');
+  renderResources();
+  renderMessages('general');
+  animateLandingPreview();
+}, 600);
+</script>
+</body>
+</html>
