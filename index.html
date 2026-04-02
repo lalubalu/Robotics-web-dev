@@ -4,8 +4,2243 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Build Robotics Studio — Community Platform</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400;1,9..40,500;1,9..40,600&family=Playfair+Display:ital,wght@0,600;1,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23e55b2d'/><text y='72' x='14' font-size='72'>🤖</text></svg>" />
+<style>
+/* ============================================================
+   BUILD ROBOTICS STUDIO — Redesigned
+   DM Sans + Playfair Display, warm neutral palette
+   Accent: #e55b2d, single color throughout
+   ============================================================ */
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  /* Surface */
+  --bg:        #f7f6f3;
+  --bg-2:      #efeee9;
+  --surface:   #ffffff;
+  --surface-2: #faf9f6;
+
+  /* Border */
+  --border:        #e5e2dc;
+  --border-strong: #ccc9c2;
+
+  /* Text */
+  --text-1: #1a1a1a;
+  --text-2: #6b6b6b;
+  --text-3: #a8a29e;
+
+  /* Accent */
+  --accent:        #e55b2d;
+  --accent-hover:  #cc4c22;
+  --accent-dim:    #fff4ef;
+  --accent-border: #fbd0be;
+
+  /* Dark (sidebar) */
+  --dark-bg:      #18181b;
+  --dark-surface: #1e1e21;
+  --dark-border:  #2a2a2e;
+  --dark-text-1:  #fafaf9;
+  --dark-text-2:  #a1a09e;
+  --dark-text-3:  #52514e;
+
+  /* Status */
+  --green:   #16a34a;
+  --green-bg: #f0fdf4;
+  --blue:    #2563eb;
+  --blue-bg: #eff6ff;
+  --amber:   #d97706;
+  --amber-bg: #fffbeb;
+
+  /* Typography */
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans:  'DM Sans', system-ui, sans-serif;
+  --font-mono:  'JetBrains Mono', monospace;
+
+  /* Layout */
+  --nav-h:    64px;
+  --sidebar-w: 240px;
+  --content-max: 1180px;
+  --text-max:  660px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 0.18s;
+  --dur-base: 0.18s;
+  --dur-slow: 0.35s;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-1);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img, video { max-width: 100%; display: block; }
+
+button { font-family: inherit; cursor: pointer; }
+
+a { color: inherit; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+
+/* ============================================================
+   TYPOGRAPHY SCALE
+   ============================================================ */
+.t-display {
+  font-family: var(--font-serif);
+  font-size: clamp(2.75rem, 6vw, 5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--text-1);
+}
+
+.t-display em { font-style: italic; color: var(--accent); }
+
+.t-h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.t-h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+}
+
+.t-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.t-body { font-size: 0.9375rem; line-height: 1.6; color: var(--text-2); }
+
+.t-small { font-size: 0.8125rem; line-height: 1.5; }
+
+.t-mono { font-family: var(--font-mono); font-size: 0.8125rem; }
+
+/* ============================================================
+   LOADING SCREEN
+   ============================================================ */
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#loading-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.loader-wordmark {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.loader-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--text-1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.loader-name {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-1);
+}
+
+.loader-track {
+  width: 180px;
+  height: 2px;
+  background: var(--border);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.loader-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  border-radius: 1px;
+  transition: width 0.1s linear;
+}
+
+.loader-status {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--text-3);
+  letter-spacing: 0.05em;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5625rem 1.125rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition: background 0.18s ease,
+              border-color 0.18s ease,
+              color 0.18s ease,
+              box-shadow 0.18s ease,
+              transform 0.18s ease;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.btn:active { transform: translateY(1px); }
+
+/* Primary */
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.btn-primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  box-shadow: 0 4px 12px rgba(229, 91, 45, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Accent */
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 1px 3px rgba(229, 91, 45, 0.3);
+}
+.btn-accent:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  box-shadow: 0 4px 12px rgba(229, 91, 45, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Outline */
+.btn-outline {
+  background: transparent;
+  color: var(--text-1);
+  border-color: var(--border-strong);
+}
+.btn-outline:hover {
+  background: var(--surface-2);
+  border-color: var(--text-3);
+}
+
+/* Ghost */
+.btn-ghost {
+  background: transparent;
+  color: var(--text-2);
+  border-color: transparent;
+}
+.btn-ghost:hover { background: var(--bg-2); color: var(--text-1); }
+
+/* Dark variants */
+.btn-dark-ghost {
+  background: transparent;
+  color: var(--dark-text-2);
+  border-color: transparent;
+}
+.btn-dark-ghost:hover { background: rgba(255,255,255,0.06); color: var(--dark-text-1); }
+
+/* Sizes */
+.btn-sm { padding: 0.375rem 0.75rem; font-size: 0.8125rem; border-radius: 6px; }
+.btn-lg { padding: 0.75rem 1.5rem; font-size: 0.9375rem; border-radius: 6px; }
+.btn-icon { padding: 0.5rem; border-radius: 6px; }
+
+/* ============================================================
+   CHIP / BADGE
+   ============================================================ */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+  border: 1px solid transparent;
+}
+
+.chip-neutral { background: var(--bg-2); color: var(--text-2); border-color: var(--border); }
+.chip-accent { background: var(--accent-dim); color: var(--accent); border-color: var(--accent-border); }
+.chip-green { background: var(--green-bg); color: var(--green); border-color: #bbf7d0; }
+.chip-blue { background: var(--blue-bg); color: var(--blue); border-color: #bfdbfe; }
+.chip-amber { background: var(--amber-bg); color: var(--amber); border-color: #fde68a; }
+
+/* Dark chips */
+.chip-dark { background: rgba(255,255,255,0.07); color: var(--dark-text-2); border-color: var(--dark-border); }
+
+/* ============================================================
+   LANDING PAGE
+   ============================================================ */
+#landing-page { min-height: 100vh; background: var(--bg); }
+
+/* NAV */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  height: var(--nav-h);
+  background: rgba(247, 246, 243, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 2.5rem;
+  gap: 2rem;
+}
+
+.nav-wordmark {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.nav-logo-sq {
+  width: 28px;
+  height: 28px;
+  background: var(--text-1);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.nav-wordmark-text {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-1);
+}
+
+.nav-links-list {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  list-style: none;
+  margin-left: 1.5rem;
+}
+
+.nav-links-list a {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--text-2);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.nav-links-list a:hover { background: var(--bg-2); color: var(--text-1); }
+
+.nav-spacer { flex: 1; }
+
+.nav-actions { display: flex; align-items: center; gap: 0.5rem; }
+
+/* HERO */
+.hero {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 5rem 2.5rem 4rem;
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 5rem;
+  align-items: center;
+}
+
+.hero-left { max-width: 600px; }
+
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.hero-pulse {
+  width: 8px;
+  height: 8px;
+  background: var(--green);
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4);
+  animation: pulse-ring 2s ease-in-out infinite;
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(22, 163, 74, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+}
+
+.hero-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 5.5vw, 4.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--text-1);
+  margin-bottom: 1.5rem;
+}
+
+.hero-heading em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.hero-body {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--text-2);
+  max-width: 500px;
+  margin-bottom: 2.25rem;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 3rem;
+}
+
+.hero-divider {
+  width: 1px;
+  height: 32px;
+  background: var(--border);
+}
+
+.hero-social-proof {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.hero-avatars {
+  display: flex;
+}
+
+.hero-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #fff;
+  margin-left: -8px;
+}
+
+.hero-avatar:first-child { margin-left: 0; }
+
+.hero-social-text {
+  font-size: 0.8125rem;
+  color: var(--text-2);
+  line-height: 1.4;
+}
+
+.hero-social-text strong { color: var(--text-1); }
+
+/* Hero Right — Dashboard Preview Card */
+.hero-right { position: relative; }
+
+.hero-preview-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06),
+    0 8px 32px rgba(0,0,0,0.06);
+  animation: float-card 6s ease-in-out infinite;
+}
+
+@keyframes float-card {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.preview-card-header {
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--surface-2);
+}
+
+.preview-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.preview-header-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-2);
+  margin-left: 0.25rem;
+}
+
+.preview-body { padding: 1rem; display: flex; flex-direction: column; gap: 0.625rem; }
+
+.preview-project {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.preview-project:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.preview-project-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.preview-project-info { flex: 1; min-width: 0; }
+.preview-project-name { font-size: 0.8125rem; font-weight: 600; color: var(--text-1); margin-bottom: 0.3rem; }
+.preview-project-meta { font-size: 0.6875rem; color: var(--text-3); margin-bottom: 0.4rem; }
+.preview-project-bar { height: 3px; background: var(--bg-2); border-radius: 2px; overflow: hidden; }
+.preview-project-fill { height: 100%; border-radius: 2px; background: var(--accent); transition: width 1.5s var(--ease-out); }
+
+.preview-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.preview-stat {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.625rem;
+  text-align: center;
+}
+
+.preview-stat-n {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--text-1);
+  margin-bottom: 0.2rem;
+}
+
+.preview-stat-l { font-size: 0.625rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); }
+
+/* Floating badge on preview card */
+.hero-badge-float {
+  position: absolute;
+  bottom: -1.25rem;
+  left: -1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  animation: float-card 6s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+.hero-badge-float-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--accent-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.hero-badge-float-text { font-size: 0.75rem; }
+.hero-badge-float-text strong { display: block; color: var(--text-1); font-weight: 600; }
+.hero-badge-float-text span { color: var(--text-3); }
+
+/* SECTION STRUCTURE */
+.landing-section {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 5rem 2.5rem;
+}
+
+.section-divider {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 2.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.section-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.section-eyebrow-line {
+  width: 24px;
+  height: 1px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+/* ALT SECTION BG */
+.section-alt { background: var(--surface); }
+
+/* FEATURES — Left-aligned asymmetric list */
+.features-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+.features-sticky {
+  position: sticky;
+  top: calc(var(--nav-h) + 2rem);
+}
+
+.features-heading {
+  font-family: var(--font-serif);
+  font-size: 2.25rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+.features-body { color: var(--text-2); line-height: 1.6; margin-bottom: 2rem; }
+
+.features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.feature-item {
+  display: flex;
+  gap: 1.25rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+
+.feature-item:first-child { border-top: 1px solid var(--border); }
+
+.feature-item:hover .feature-item-num { color: var(--accent); }
+
+.feature-item-num {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-3);
+  padding-top: 0.125rem;
+  flex-shrink: 0;
+  width: 24px;
+  transition: color 0.18s ease;
+}
+
+.feature-item-content { flex: 1; }
+.feature-item-title { font-size: 0.9375rem; font-weight: 600; color: var(--text-1); margin-bottom: 0.375rem; letter-spacing: -0.01em; }
+.feature-item-desc { font-size: 0.875rem; color: var(--text-2); line-height: 1.6; }
+
+/* PROJECTS — Alternating layout */
+.landing-projects-list { display: flex; flex-direction: column; gap: 2px; }
+
+.landing-project-row {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.25rem;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+  cursor: pointer;
+}
+
+.landing-project-row:hover {
+  border-color: var(--border);
+  background: var(--surface);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.landing-project-emoji {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.landing-project-info { flex: 1; min-width: 0; }
+.landing-project-name { font-weight: 600; font-size: 0.9375rem; color: var(--text-1); margin-bottom: 0.25rem; }
+.landing-project-desc { font-size: 0.8125rem; color: var(--text-2); line-height: 1.5; }
+.landing-project-right { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
+.landing-project-progress-wrap { width: 80px; }
+.landing-project-progress-label { font-size: 0.6875rem; color: var(--text-3); margin-bottom: 0.3rem; text-align: right; }
+.landing-project-bar { height: 4px; background: var(--bg-2); border-radius: 2px; overflow: hidden; }
+.landing-project-fill { height: 100%; border-radius: 2px; background: var(--accent); }
+
+/* ANGLED DIVIDER — break the grid */
+.angled-divider {
+  position: relative;
+  height: 80px;
+  background: var(--bg);
+  overflow: hidden;
+}
+.angled-divider::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -5%;
+  width: 110%; height: 100%;
+  background: var(--surface);
+  transform: skewY(-2deg);
+  transform-origin: top left;
+}
+
+/* CTA SECTION */
+.cta-section {
+  background: var(--text-1);
+  color: #fff;
+  padding: 6rem 2.5rem;
+  text-align: center;
+}
+
+.cta-section .t-label { color: rgba(255,255,255,0.4); }
+
+.cta-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin: 1rem 0 1.5rem;
+}
+
+.cta-heading em { font-style: italic; color: var(--accent); }
+
+.cta-body {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.55);
+  max-width: 500px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.6;
+}
+
+.cta-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+
+.btn-white {
+  background: #fff;
+  color: var(--text-1);
+  border-color: #fff;
+}
+.btn-white:hover { background: #f5f5f5; }
+
+.btn-white-outline {
+  background: transparent;
+  color: rgba(255,255,255,0.75);
+  border-color: rgba(255,255,255,0.2);
+}
+.btn-white-outline:hover { background: rgba(255,255,255,0.08); color: #fff; border-color: rgba(255,255,255,0.35); }
+
+/* FOOTER */
+.site-footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 2rem 2.5rem;
+}
+
+.footer-inner {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a {
+  font-size: 0.8125rem;
+  color: var(--text-3);
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+.footer-links a:hover { color: var(--text-2); }
+
+/* ============================================================
+   APP SHELL
+   ============================================================ */
+#app {
+  display: none;
+  min-height: 100vh;
+}
+
+#app.active { display: flex; }
+
+/* SIDEBAR */
+.app-sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: var(--dark-bg);
+  border-right: 1px solid var(--dark-border);
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s var(--ease-out);
+}
+
+.sidebar-top {
+  padding: 1rem;
+  border-bottom: 1px solid var(--dark-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar-wordmark {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sidebar-logo-sq {
+  width: 26px;
+  height: 26px;
+  background: var(--accent);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+}
+
+.sidebar-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--dark-text-1);
+  letter-spacing: -0.01em;
+}
+
+.sidebar-nav-wrap {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem 0.625rem;
+}
+
+.sidebar-section-label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dark-text-3);
+  padding: 0.75rem 0.625rem 0.375rem;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  width: 100%;
+  padding: 0.4375rem 0.625rem;
+  border-radius: 7px;
+  border: none;
+  border-left: 3px solid transparent;
+  background: transparent;
+  color: var(--dark-text-2);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 450;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+  margin-bottom: 1px;
+  letter-spacing: -0.005em;
+}
+
+.sidebar-nav-item:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--dark-text-1);
+}
+
+.sidebar-nav-item.active {
+  background: rgba(229, 91, 45, 0.08);
+  color: var(--dark-text-1);
+  border-left-color: var(--accent);
+}
+
+.sidebar-item-icon {
+  font-size: 0.9rem;
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.sidebar-item-badge {
+  margin-left: auto;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.625rem;
+  font-weight: 700;
+  padding: 0.125rem 0.375rem;
+  border-radius: 100px;
+  min-width: 16px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.sidebar-item-badge.green { background: var(--green); }
+.sidebar-item-badge.dim { background: rgba(255,255,255,0.12); color: var(--dark-text-2); }
+
+.sidebar-bottom {
+  padding: 0.75rem;
+  border-top: 1px solid var(--dark-border);
+}
+
+.sidebar-user-row {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.5rem 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+
+.sidebar-user-row:hover { background: rgba(255,255,255,0.05); }
+
+.sidebar-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.sidebar-user-info { flex: 1; min-width: 0; }
+.sidebar-user-name { font-size: 0.8125rem; font-weight: 500; color: var(--dark-text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sidebar-user-sub { font-size: 0.6875rem; color: var(--dark-text-3); }
+
+/* TOPBAR */
+.app-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 56px;
+  background: rgba(247, 246, 243, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  gap: 1rem;
+}
+
+.topbar-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-1);
+  letter-spacing: -0.01em;
+  flex-shrink: 0;
+}
+
+.topbar-search {
+  flex: 1;
+  max-width: 360px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.4375rem 0.75rem;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.topbar-search:focus-within {
+  border-color: var(--border-strong);
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+}
+
+.topbar-search-icon { font-size: 0.875rem; color: var(--text-3); flex-shrink: 0; }
+
+.topbar-search input {
+  flex: 1;
+  border: none;
+  background: none;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--text-1);
+  outline: none;
+  min-width: 0;
+}
+
+.topbar-search input::placeholder { color: var(--text-3); }
+
+.topbar-spacer { flex: 1; }
+
+.topbar-actions { display: flex; align-items: center; gap: 0.25rem; }
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.icon-btn:hover { background: var(--bg-2); color: var(--text-1); }
+
+.notif-pip {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: 1px solid var(--bg);
+}
+
+/* MAIN CONTENT AREA */
+.app-main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+/* PAGE */
+.app-page {
+  display: none;
+  padding: 2rem 1.75rem;
+  animation: page-in 0.25s var(--ease-out);
+  flex: 1;
+}
+
+.app-page.active { display: block; }
+
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.page-header-left { }
+.page-title { font-size: 1.25rem; font-weight: 700; color: var(--text-1); letter-spacing: -0.02em; line-height: 1.2; }
+.page-sub { font-size: 0.8125rem; color: var(--text-3); margin-top: 0.25rem; }
+
+/* CARD */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.card-padded { padding: 1.25rem; }
+
+.card-header {
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-1);
+  letter-spacing: -0.01em;
+}
+
+.card-body { padding: 1rem 1.25rem; }
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+.dash-greeting {
+  margin-bottom: 1.75rem;
+}
+
+.dash-greeting-h {
+  font-family: var(--font-serif);
+  font-size: 1.625rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
+}
+
+.dash-greeting-sub { font-size: 0.8125rem; color: var(--text-3); }
+
+/* Stats */
+.dash-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  background: var(--border);
+}
+
+.dash-stat-item {
+  background: var(--surface);
+  padding: 1.125rem 1.25rem;
+  transition: background 0.18s ease;
+}
+
+.dash-stat-item:hover { background: var(--surface-2); }
+
+.dash-stat-label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 0.5rem;
+}
+
+.dash-stat-num {
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  line-height: 1;
+  color: var(--text-1);
+  margin-bottom: 0.375rem;
+}
+
+.dash-stat-change {
+  font-size: 0.75rem;
+  color: var(--text-3);
+}
+
+.dash-stat-change.up { color: var(--green); }
+.dash-stat-change.down { color: #dc2626; }
+
+/* Dashboard grid */
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 340px;
+  gap: 1rem;
+}
+
+/* Progress bar */
+.prog-bar {
+  height: 4px;
+  background: var(--bg-2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.prog-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--accent);
+  width: 0;
+  transition: width 1s var(--ease-out);
+}
+
+.prog-fill.green { background: var(--green); }
+.prog-fill.blue { background: var(--blue); }
+
+/* Project mini row */
+.proj-mini-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+
+.proj-mini-row:last-child { border-bottom: none; }
+.proj-mini-row:hover { background: var(--surface-2); margin: 0 -1.25rem; padding: 0.75rem 1.25rem; border-radius: 8px; }
+
+.proj-mini-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.proj-mini-info { flex: 1; min-width: 0; }
+.proj-mini-name { font-size: 0.8125rem; font-weight: 600; color: var(--text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.proj-mini-sub { font-size: 0.6875rem; color: var(--text-3); margin-top: 0.2rem; }
+.proj-mini-progress { margin-top: 0.375rem; }
+.proj-mini-pct { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--text-3); margin-bottom: 0.2rem; }
+
+/* Activity */
+.activity-row {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.activity-row:last-child { border-bottom: none; }
+
+.activity-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.activity-content { flex: 1; }
+.activity-text { font-size: 0.8125rem; line-height: 1.5; color: var(--text-2); }
+.activity-text strong { color: var(--text-1); font-weight: 600; }
+.activity-time { font-size: 0.6875rem; color: var(--text-3); margin-top: 0.2rem; }
+
+/* Event mini */
+.event-row {
+  display: flex;
+  gap: 0.875rem;
+  align-items: flex-start;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+
+.event-row:last-child { border-bottom: none; }
+.event-row:hover { background: var(--surface-2); margin: 0 -1.25rem; padding: 0.75rem 1.25rem; border-radius: 8px; }
+
+.event-date-col {
+  min-width: 40px;
+  text-align: center;
+  padding: 0.375rem 0.5rem;
+  border-radius: 8px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+}
+
+.event-date-d { font-family: var(--font-serif); font-size: 1.125rem; line-height: 1; color: var(--text-1); font-weight: 600; }
+.event-date-m { font-size: 0.5625rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); margin-top: 0.2rem; }
+.event-title { font-size: 0.8125rem; font-weight: 600; color: var(--text-1); margin-bottom: 0.2rem; }
+.event-meta { font-size: 0.6875rem; color: var(--text-3); }
+
+/* ============================================================
+   PROJECTS HUB
+   ============================================================ */
+.projects-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.filter-tab {
+  padding: 0.375rem 0.875rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.filter-tab:hover { border-color: var(--border-strong); color: var(--text-1); }
+.filter-tab.active { background: var(--text-1); color: #fff; border-color: var(--text-1); }
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.project-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.project-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+}
+
+.project-card-top {
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.project-card-body { padding: 1.125rem; }
+.project-card-name { font-size: 0.9375rem; font-weight: 700; color: var(--text-1); letter-spacing: -0.01em; margin-bottom: 0.375rem; }
+.project-card-desc { font-size: 0.8125rem; color: var(--text-2); line-height: 1.6; margin-bottom: 0.875rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+.project-tags { display: flex; gap: 0.375rem; flex-wrap: wrap; margin-bottom: 0.875rem; }
+.tag {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  padding: 0.1875rem 0.5rem;
+  border-radius: 4px;
+  background: var(--bg-2);
+  color: var(--text-2);
+  border: 1px solid var(--border);
+}
+
+.project-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.875rem;
+  border-top: 1px solid var(--border);
+}
+
+.member-stack { display: flex; }
+.member-avatar-xs {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  color: #fff;
+  margin-left: -6px;
+}
+
+.member-avatar-xs:first-child { margin-left: 0; }
+.member-count-label { font-size: 0.6875rem; color: var(--text-3); margin-left: 0.5rem; }
+
+.project-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  padding: 0.1875rem 0.5625rem;
+  border-radius: 6px;
+  border: 1px solid;
+}
+
+.status-active { background: var(--green-bg); color: var(--green); border-color: #bbf7d0; }
+.status-active::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
+.status-planning { background: var(--blue-bg); color: var(--blue); border-color: #bfdbfe; }
+.status-completed { background: var(--bg-2); color: var(--text-3); border-color: var(--border); }
+
+/* ============================================================
+   PROFILES
+   ============================================================ */
+.profiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1rem;
+}
+
+.profile-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.profile-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  transform: translateY(-2px);
+}
+
+.profile-av {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 auto 0.875rem;
+}
+
+.profile-name { font-size: 0.9375rem; font-weight: 700; color: var(--text-1); letter-spacing: -0.01em; margin-bottom: 0.2rem; }
+.profile-school { font-size: 0.75rem; color: var(--text-3); margin-bottom: 0.875rem; }
+.profile-skills { display: flex; flex-wrap: wrap; gap: 0.3rem; justify-content: center; margin-bottom: 1rem; }
+.profile-skill { font-size: 0.6875rem; color: var(--text-2); background: var(--bg-2); border: 1px solid var(--border); padding: 0.125rem 0.5rem; border-radius: 4px; }
+.profile-stats { display: flex; gap: 1.25rem; justify-content: center; }
+.profile-stat { text-align: center; }
+.profile-stat-n { font-family: var(--font-serif); font-size: 1rem; color: var(--text-1); display: block; }
+.profile-stat-l { font-size: 0.5625rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); }
+
+/* ============================================================
+   CHAT
+   ============================================================ */
+.chat-shell {
+  display: grid;
+  grid-template-columns: 256px 1fr;
+  height: calc(100vh - 56px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.chat-left {
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-2);
+}
+
+.chat-left-header {
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.chat-left-title { font-size: 0.75rem; font-weight: 600; color: var(--text-2); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 0.625rem; }
+
+.chat-room-row {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+
+.chat-room-row:hover { background: var(--bg); }
+.chat-room-row.active { background: var(--bg); }
+
+.chat-room-icon-sq {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-2);
+  flex-shrink: 0;
+}
+
+.chat-room-row.active .chat-room-icon-sq { background: var(--accent-dim); border-color: var(--accent-border); color: var(--accent); }
+
+.chat-room-info { flex: 1; min-width: 0; }
+.chat-room-name { font-size: 0.8125rem; font-weight: 500; color: var(--text-1); }
+.chat-room-last { font-size: 0.6875rem; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 0.1rem; }
+.chat-room-badge { background: var(--accent); color: #fff; font-size: 0.6rem; font-weight: 700; padding: 0.125rem 0.375rem; border-radius: 100px; flex-shrink: 0; }
+
+.chat-right {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+}
+
+.chat-right-header {
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-right-title { font-size: 0.9375rem; font-weight: 600; color: var(--text-1); }
+.chat-right-meta { font-size: 0.75rem; color: var(--text-3); margin-top: 0.1rem; }
+
+.chat-messages-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.chat-date-label {
+  text-align: center;
+  font-size: 0.6875rem;
+  color: var(--text-3);
+  padding: 0.75rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.chat-date-label::before, .chat-date-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.chat-msg {
+  display: flex;
+  gap: 0.625rem;
+  padding: 0.3rem 0;
+}
+
+.chat-msg.own { flex-direction: row-reverse; }
+
+.chat-msg-av {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+
+.chat-msg-body { max-width: 72%; }
+.chat-msg.own .chat-msg-body { display: flex; flex-direction: column; align-items: flex-end; }
+
+.chat-msg-sender { font-size: 0.6875rem; font-weight: 600; color: var(--text-2); margin-bottom: 0.2rem; }
+
+.chat-msg-bubble {
+  padding: 0.5625rem 0.875rem;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  word-break: break-word;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.chat-msg.own .chat-msg-bubble {
+  background: var(--text-1);
+  color: #fff;
+  border-color: var(--text-1);
+}
+
+.chat-msg-time { font-size: 0.625rem; color: var(--text-3); margin-top: 0.25rem; }
+
+.chat-input-bar {
+  padding: 0.875rem 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.chat-input-wrap {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
+  background: var(--surface-2);
+  transition: border-color 0.18s ease;
+}
+
+.chat-input-wrap:focus-within {
+  border-color: var(--border-strong);
+  background: var(--surface);
+}
+
+.chat-textarea {
+  flex: 1;
+  border: none;
+  background: none;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--text-1);
+  outline: none;
+  resize: none;
+  max-height: 120px;
+  line-height: 1.5;
+  padding: 0.25rem 0;
+}
+
+.chat-textarea::placeholder { color: var(--text-3); }
+
+.chat-send-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.chat-send-btn:hover { background: var(--accent-hover); transform: scale(1.05); }
+
+/* ============================================================
+   CALENDAR
+   ============================================================ */
+.calendar-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 1.25rem;
+}
+
+.cal-grid { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.cal-grid-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.cal-month-title { font-size: 0.9375rem; font-weight: 700; color: var(--text-1); letter-spacing: -0.01em; }
+.cal-nav { display: flex; gap: 0.25rem; }
+.cal-nav-btn {
+  width: 30px; height: 30px;
+  border-radius: 6px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text-2);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  transition: all 0.18s ease;
+}
+.cal-nav-btn:hover { background: var(--bg-2); color: var(--text-1); }
+
+.cal-day-headers { display: grid; grid-template-columns: repeat(7,1fr); border-bottom: 1px solid var(--border); background: var(--surface-2); }
+.cal-day-header-cell { padding: 0.5rem; text-align: center; font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); }
+
+.cal-cells { display: grid; grid-template-columns: repeat(7,1fr); }
+
+.cal-cell {
+  min-height: 80px;
+  padding: 0.5rem;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+
+.cal-cell:nth-child(7n) { border-right: none; }
+.cal-cell:hover { background: var(--surface-2); }
+.cal-cell.other-month .cal-num { opacity: 0.3; }
+.cal-cell.today .cal-num {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 50%;
+  font-weight: 700;
+}
+
+.cal-num { font-size: 0.8125rem; font-weight: 500; color: var(--text-1); margin-bottom: 0.3rem; }
+.cal-event-dots { display: flex; flex-direction: column; gap: 2px; }
+.cal-event-pip {
+  padding: 0.125rem 0.375rem;
+  border-radius: 3px;
+  font-size: 0.5625rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cal-event-pip.competition { background: var(--accent-dim); color: var(--accent); }
+.cal-event-pip.workshop { background: var(--blue-bg); color: var(--blue); }
+.cal-event-pip.challenge { background: var(--green-bg); color: var(--green); }
+
+/* ============================================================
+   RESOURCES
+   ============================================================ */
+.resources-layout {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 1.25rem;
+}
+
+.resources-sidebar-nav {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.875rem;
+  height: fit-content;
+  position: sticky;
+  top: calc(56px + 1.25rem);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.res-cat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4375rem 0.625rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+  color: var(--text-2);
+  margin-bottom: 1px;
+}
+
+.res-cat:hover { background: var(--bg-2); color: var(--text-1); }
+.res-cat.active { background: var(--bg-2); color: var(--text-1); font-weight: 500; }
+
+.resources-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; align-content: start; }
+
+.resource-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.125rem;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.resource-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  transform: translateY(-1px);
+}
+
+.resource-type { font-size: 0.75rem; font-weight: 600; margin-bottom: 0.625rem; }
+.resource-type.tutorial { color: var(--blue); }
+.resource-type.guide { color: var(--green); }
+.resource-type.template { color: var(--accent); }
+.resource-type.video { color: var(--amber); }
+.resource-title { font-size: 0.875rem; font-weight: 700; color: var(--text-1); letter-spacing: -0.01em; margin-bottom: 0.375rem; }
+.resource-desc { font-size: 0.8125rem; color: var(--text-2); line-height: 1.55; margin-bottom: 0.875rem; }
+.resource-footer { display: flex; align-items: center; justify-content: space-between; }
+.resource-level { font-size: 0.6875rem; font-weight: 500; padding: 0.1875rem 0.5rem; border-radius: 4px; }
+.resource-level.beginner { background: var(--green-bg); color: var(--green); }
+.resource-level.intermediate { background: var(--blue-bg); color: var(--blue); }
+.resource-level.advanced { background: var(--accent-dim); color: var(--accent); }
+.resource-views { font-size: 0.6875rem; color: var(--text-3); }
+
+/* ============================================================
+   LEADERBOARD
+   ============================================================ */
+.leaderboard-layout { display: grid; grid-template-columns: 1fr 280px; gap: 1.25rem; }
+
+.lb-table { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+
+.lb-row {
+  display: grid;
+  grid-template-columns: 52px 1fr 120px 90px 64px;
+  align-items: center;
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+
+.lb-row:last-child { border-bottom: none; }
+.lb-row:hover { background: var(--surface-2); }
+.lb-row.header { background: var(--surface-2); cursor: default; }
+.lb-row.header:hover { background: var(--surface-2); }
+
+.lb-rank { font-family: var(--font-serif); font-size: 1.125rem; color: var(--text-3); font-weight: 600; }
+.lb-rank.gold { color: #d97706; }
+.lb-rank.silver { color: #9ca3af; }
+.lb-rank.bronze { color: #b45309; }
+
+.lb-user { display: flex; align-items: center; gap: 0.75rem; }
+.lb-user-name { font-size: 0.875rem; font-weight: 600; color: var(--text-1); }
+.lb-user-school { font-size: 0.6875rem; color: var(--text-3); }
+
+.lb-badges-cell { display: flex; gap: 0.25rem; }
+.lb-badge-sm { font-size: 0.875rem; }
+
+.lb-points { font-family: var(--font-mono); font-size: 0.875rem; font-weight: 500; color: var(--text-1); }
+
+.lb-change { font-size: 0.75rem; font-weight: 500; }
+.lb-change.up { color: var(--green); }
+.lb-change.down { color: #dc2626; }
+
+/* Skills panel */
+.skill-bar-item { margin-bottom: 0.875rem; }
+.skill-bar-header { display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.375rem; }
+.skill-bar-label { color: var(--text-2); font-weight: 500; }
+.skill-bar-pct { font-family: var(--font-mono); color: var(--text-3); font-size: 0.6875rem; }
+.skill-bar-track { height: 5px; background: var(--bg-2); border-radius: 4px; overflow: hidden; border: 1px solid var(--border); }
+.skill-bar-fill { height: 100%; border-radius: 4px; background: var(--accent); width: 0; transition: width 1.2s var(--ease-out); }
+
+/* Badges */
+.badges-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.625rem; }
+.badge-item {
+  text-align: center;
+  padding: 0.875rem 0.5rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.badge-item:hover { border-color: var(--border-strong); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.badge-item.locked { opacity: 0.4; filter: grayscale(1); }
+.badge-icon-lg { font-size: 1.5rem; margin-bottom: 0.35rem; display: block; }
+.badge-name-sm { font-size: 0.625rem; font-weight: 500; color: var(--text-3); }
+
+/* ============================================================
+   ABOUT
+   ============================================================ */
+.about-hero {
+  padding: 3rem 0 2.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2.5rem;
+}
+
+.about-hero-h {
+  font-family: var(--font-serif);
+  font-size: 2.25rem;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0.75rem 0 1rem;
+  max-width: 560px;
+}
+
+.about-hero-h em { font-style: italic; color: var(--accent); }
+
+.mission-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+
+.mission-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.mission-card-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 0.625rem;
+}
+
+.mission-card-body { font-size: 0.875rem; color: var(--text-2); line-height: 1.6; }
+
+.team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+
+.team-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.team-card:hover { border-color: var(--border-strong); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+.team-av { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; color: #fff; margin: 0 auto 0.875rem; }
+.team-name { font-size: 0.875rem; font-weight: 700; color: var(--text-1); margin-bottom: 0.2rem; }
+.team-role { font-size: 0.75rem; color: var(--accent); font-weight: 500; margin-bottom: 0.3rem; }
+.team-school { font-size: 0.6875rem; color: var(--text-3); }
+
+/* ============================================================
+   NOTIFICATION PANEL
+   ============================================================ */
+.notif-panel {
+  position: fixed;
+  top: calc(56px + 8px);
+  right: 1rem;
+  width: 340px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 12px rgba(0,0,0,0.06);
+  z-index: 500;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px) scale(0.98);
+  transform-origin: top right;
+  transition: opacity 0.18s var(--ease-out), visibility 0.18s var(--ease-out), transform 0.18s var(--ease-out);
+}
+
+.notif-panel.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.notif-panel-header {
+  padding: 0.875rem 1.125rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notif-panel-title { font-size: 0.875rem; font-weight: 700; color: var(--text-1); letter-spacing: -0.01em; }
+.notif-mark-read { font-size: 0.75rem; color: var(--accent); cursor: pointer; }
+.notif-mark-read:hover { text-decoration: underline; }
+
+.notif-item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.875rem 1.125rem;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+
+.notif-item:last-child { border-bottom: none; }
+.notif-item:hover { background: var(--surface-2); }
+.notif-item.unread { background: rgba(229, 91, 45, 0.03); }
+
+.notif-av { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
+.notif-text { font-size: 0.8125rem; color: var(--text-2); line-height: 1.5; }
+.notif-text strong { color: var(--text-1); font-weight: 600; }
+.notif-time { font-size: 0.6875rem; color: var(--text-3); margin-top: 0.2rem; }
+
+/* ============================================================
+   MODALS
+   ============================================================ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(4px);
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
+}
+
+.modal-backdrop.open { opacity: 1; visibility: visible; }
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.18);
+  transform: translateY(16px) scale(0.98);
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.modal-backdrop.open .modal { transform: translateY(0) scale(1); }
+
+.modal-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title { font-size: 1rem; font-weight: 700; color: var(--text-1); letter-spacing: -0.01em; }
+
+.modal-close {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: var(--bg-2);
+  color: var(--text-2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.modal-close:hover { background: var(--border); color: var(--text-1); }
+
+.modal-body { padding: 1.25rem 1.5rem; }
+.modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; gap: 0.625rem; justify-content: flex-end; }
+
+/* Form */
+.form-group { margin-bottom: 1.125rem; }
+
+.form-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-1);
+  margin-bottom: 0.4rem;
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5625rem 0.875rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--text-1);
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--text-1);
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+}
+
+.form-input::placeholder, .form-textarea::placeholder { color: var(--text-3); }
+.form-textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
+.form-select { appearance: none; cursor: pointer; }
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+.toast-stack {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toast {
+  background: var(--text-1);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  min-width: 260px;
+  max-width: 360px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  animation: toast-slide-in 0.35s var(--ease-out);
+}
+
+.toast.removing { animation: toast-slide-out 0.25s ease forwards; }
+
+@keyframes toast-slide-in { from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } }
+@keyframes toast-slide-out { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(100%); } }
+
+.toast-icon { font-size: 0.875rem; margin-top: 0.125rem; flex-shrink: 0; }
+.toast-body { flex: 1; }
+.toast-title { font-size: 0.8125rem; font-weight: 600; color: #fff; }
+.toast-msg { font-size: 0.75rem; color: rgba(255,255,255,0.55); margin-top: 0.1rem; }
+
+/* left border indicator */
+.toast.success { border-left: 3px solid #4ade80; }
+.toast.info { border-left: 3px solid #60a5fa; }
+.toast.warning { border-left: 3px solid #fbbf24; }
+
+/* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+}
+
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+.reveal-delay-4 { transition-delay: 0.32s; }
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+.flex { display: flex; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.flex-col { display: flex; flex-direction: column; }
+.gap-1 { gap: 0.5rem; }
+.gap-2 { gap: 1rem; }
+.items-center { align-items: center; }
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.divider { height: 1px; background: var(--border); margin: 1.25rem 0; }
+
+/* sidebar toggle mobile */
+.sidebar-toggle-btn {
+  display: none;
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-2);
+  align-items: center; justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.sidebar-toggle-btn:hover { background: var(--bg-2); color: var(--text-1); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  .hero { grid-template-columns: 1fr; gap: 3rem; }
+  .hero-right { display: none; }
+  .features-layout { grid-template-columns: 1fr; }
+  .features-sticky { position: static; }
+  .dash-stats { grid-template-columns: repeat(2,1fr); }
+  .dash-grid { grid-template-columns: 1fr; }
+  .leaderboard-layout { grid-template-columns: 1fr; }
+  .lb-row { grid-template-columns: 48px 1fr 80px; }
+  .lb-badges-cell, .lb-change { display: none; }
+}
+
+@media (max-width: 768px) {
+  .app-sidebar { transform: translateX(-100%); }
+  .app-sidebar.open { transform: translateX(0); box-shadow: 0 0 0 100vw rgba(0,0,0,0.4); }
+  .app-main { margin-left: 0; }
+  .sidebar-toggle-btn { display: flex; }
+  .site-nav { padding: 0 1.25rem; }
+  .nav-links-list { display: none; }
+  .hero { padding: 3rem 1.25rem 2.5rem; }
+  .landing-section { padding: 3rem 1.25rem; }
+  .calendar-layout { grid-template-columns: 1fr; }
+  .resources-layout { grid-template-columns: 1fr; }
+  .resources-sidebar-nav { display: none; }
+  .chat-shell { grid-template-columns: 1fr; }
+  .chat-left { display: none; }
+  .app-page { padding: 1.25rem; }
+}
+</style>
 </head>
 <body>
 
@@ -43,7 +2278,7 @@
     <div class="nav-spacer"></div>
     <div class="nav-actions">
       <button class="btn btn-ghost btn-sm" onclick="launchApp()">Sign in</button>
-      <button class="btn btn-accent btn-sm" onclick="launchApp()">Join free →</button>
+      <button class="btn btn-accent btn-sm" onclick="launchApp()">Join free</button>
     </div>
   </nav>
 
@@ -65,9 +2300,9 @@
         </p>
 
         <div class="hero-actions">
-          <button class="btn btn-primary btn-lg" onclick="launchApp()">Open the studio</button>
+          <button class="btn btn-accent btn-lg" onclick="launchApp()">Open the studio</button>
           <div class="hero-divider"></div>
-          <button class="btn btn-ghost btn-lg" onclick="launchApp();navigateTo('projects')" style="color:var(--text-2)">Browse projects →</button>
+          <button class="btn btn-ghost btn-lg" onclick="launchApp();navigateTo('projects')" style="color:var(--text-2)">Browse projects</button>
         </div>
 
         <div class="hero-social-proof">
@@ -190,7 +2425,7 @@
         <p class="features-body">
           Everything from first sketch to competition day. Profiles, projects, chat, calendar, resources, and recognition — in one place.
         </p>
-        <button class="btn btn-accent" onclick="launchApp()">Start building →</button>
+        <button class="btn btn-accent" onclick="launchApp()">Start building</button>
       </div>
 
       <div class="features-list">
@@ -240,6 +2475,9 @@
     </div>
   </section>
 
+  <!-- ANGLED DIVIDER -->
+  <div class="angled-divider"></div>
+
   <!-- PROJECTS -->
   <div class="section-alt">
     <section class="landing-section" id="projects">
@@ -249,7 +2487,7 @@
       </div>
       <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem">
         <h2 style="font-family:var(--font-serif);font-size:2rem;letter-spacing:-0.02em;line-height:1.1;margin-top:.75rem">Live projects from the community.</h2>
-        <button class="btn btn-outline" onclick="launchApp();navigateTo('projects')">View all 63 →</button>
+        <button class="btn btn-outline" onclick="launchApp();navigateTo('projects')">View all 63</button>
       </div>
 
       <div class="landing-projects-list">
@@ -322,14 +2560,14 @@
           <span class="t-label">The people</span>
         </div>
         <h2 style="font-family:var(--font-serif);font-size:2rem;letter-spacing:-0.02em;line-height:1.1;margin:.75rem 0 1rem">Students, mentors, designers, builders.</h2>
-        <p style="font-size:.9375rem;color:var(--text-2);line-height:1.65;max-width:480px;margin-bottom:2rem">
+        <p style="font-size:.9375rem;color:var(--text-2);line-height:1.6;max-width:480px;margin-bottom:2rem">
           Whatever your role — first-year student or seasoned engineer — there's a place for you here. Build your reputation, find a team, or mentor the next generation.
         </p>
-        <button class="btn btn-primary" onclick="launchApp();navigateTo('profiles')">Meet the community →</button>
+        <button class="btn btn-accent" onclick="launchApp();navigateTo('profiles')">Meet the community</button>
       </div>
 
       <div style="display:flex;flex-direction:column;gap:.625rem">
-        <div style="display:flex;gap:.75rem;align-items:center;padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;transition:box-shadow .2s ease" onmouseenter="this.style.boxShadow='0 4px 16px rgba(0,0,0,.08)'" onmouseleave="this.style.boxShadow=''">
+        <div style="display:flex;gap:.75rem;align-items:center;padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,0.06);transition:box-shadow .18s ease" onmouseenter="this.style.boxShadow='0 4px 16px rgba(0,0,0,.08)'" onmouseleave="this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'">
           <div style="width:44px;height:44px;border-radius:50%;background:#2563eb;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.8rem;flex-shrink:0">SP</div>
           <div style="flex:1">
             <div style="font-weight:600;font-size:.875rem;color:var(--text-1)">Sam Patel <span style="font-size:.75rem;color:var(--green);font-weight:500;margin-left:.4rem">● online</span></div>
@@ -339,7 +2577,7 @@
             <span style="font-size:.7rem;padding:.15rem .5rem;border-radius:4px;background:var(--accent-dim);color:var(--accent);font-weight:500">6,200 pts</span>
           </div>
         </div>
-        <div style="display:flex;gap:.75rem;align-items:center;padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;transition:box-shadow .2s ease" onmouseenter="this.style.boxShadow='0 4px 16px rgba(0,0,0,.08)'" onmouseleave="this.style.boxShadow=''">
+        <div style="display:flex;gap:.75rem;align-items:center;padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,0.06);transition:box-shadow .18s ease" onmouseenter="this.style.boxShadow='0 4px 16px rgba(0,0,0,.08)'" onmouseleave="this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'">
           <div style="width:44px;height:44px;border-radius:50%;background:#16a34a;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.8rem;flex-shrink:0">MR</div>
           <div style="flex:1">
             <div style="font-weight:600;font-size:.875rem;color:var(--text-1)">Maya Rodriguez <span style="font-size:.75rem;color:var(--green);font-weight:500;margin-left:.4rem">● online</span></div>
@@ -347,7 +2585,7 @@
           </div>
           <div style="font-size:.7rem;padding:.15rem .5rem;border-radius:4px;background:var(--blue-bg);color:var(--blue);font-weight:500">3,920 pts</div>
         </div>
-        <div style="display:flex;gap:.75rem;align-items:center;padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;transition:box-shadow .2s ease" onmouseenter="this.style.boxShadow='0 4px 16px rgba(0,0,0,.08)'" onmouseleave="this.style.boxShadow=''">
+        <div style="display:flex;gap:.75rem;align-items:center;padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,0.06);transition:box-shadow .18s ease" onmouseenter="this.style.boxShadow='0 4px 16px rgba(0,0,0,.08)'" onmouseleave="this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'">
           <div style="width:44px;height:44px;border-radius:50%;background:#7c3aed;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.8rem;flex-shrink:0">JK</div>
           <div style="flex:1">
             <div style="font-weight:600;font-size:.875rem;color:var(--text-1)">Jordan Kim <span style="font-size:.75rem;color:var(--text-3);margin-left:.4rem">● 2h ago</span></div>
@@ -355,7 +2593,7 @@
           </div>
           <div style="font-size:.7rem;padding:.15rem .5rem;border-radius:4px;background:var(--bg-2);color:var(--text-2);font-weight:500;border:1px solid var(--border)">3,540 pts</div>
         </div>
-        <div style="display:flex;gap:.75rem;align-items:center;padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;transition:box-shadow .2s ease" onmouseenter="this.style.boxShadow='0 4px 16px rgba(0,0,0,.08)'" onmouseleave="this.style.boxShadow=''">
+        <div style="display:flex;gap:.75rem;align-items:center;padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,0.06);transition:box-shadow .18s ease" onmouseenter="this.style.boxShadow='0 4px 16px rgba(0,0,0,.08)'" onmouseleave="this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'">
           <div style="width:44px;height:44px;border-radius:50%;background:#e55b2d;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.8rem;flex-shrink:0">AC</div>
           <div style="flex:1">
             <div style="font-weight:600;font-size:.875rem;color:var(--text-1)">Alex Chen <span style="font-size:.75rem;color:var(--green);font-weight:500;margin-left:.4rem">● online</span></div>
@@ -374,7 +2612,7 @@
       <h2 class="cta-heading">Built by builders,<br>for <em>builders.</em></h2>
       <p class="cta-body">We built this platform because we needed it. One place for the whole team — from first sketch to competition day. Join free and start building.</p>
       <div class="cta-actions">
-        <button class="btn btn-white btn-lg" onclick="launchApp()">Open the studio →</button>
+        <button class="btn btn-white btn-lg" onclick="launchApp()">Open the studio</button>
         <button class="btn btn-white-outline btn-lg" onclick="launchApp();navigateTo('about')">Read our story</button>
       </div>
     </div>
@@ -581,44 +2819,20 @@
           </div>
           <div class="card-body">
             <div class="event-row" onclick="navigateTo('calendar')">
-              <div class="event-date-col">
-                <div class="event-date-d">3</div>
-                <div class="event-date-m">Apr</div>
-              </div>
-              <div>
-                <div class="event-title">Python &amp; ROS2 Workshop</div>
-                <div class="event-meta">Online · 2:00 PM EDT <span class="chip chip-blue" style="margin-left:.4rem">Workshop</span></div>
-              </div>
+              <div class="event-date-col"><div class="event-date-d">3</div><div class="event-date-m">Apr</div></div>
+              <div><div class="event-title">Python &amp; ROS2 Workshop</div><div class="event-meta">Online · 2:00 PM EDT <span class="chip chip-blue" style="margin-left:.4rem">Workshop</span></div></div>
             </div>
             <div class="event-row" onclick="navigateTo('calendar')">
-              <div class="event-date-col">
-                <div class="event-date-d">8</div>
-                <div class="event-date-m">Apr</div>
-              </div>
-              <div>
-                <div class="event-title">Circuit Design Sprint</div>
-                <div class="event-meta">48hr challenge · All levels <span class="chip chip-green" style="margin-left:.4rem">Challenge</span></div>
-              </div>
+              <div class="event-date-col"><div class="event-date-d">8</div><div class="event-date-m">Apr</div></div>
+              <div><div class="event-title">Circuit Design Sprint</div><div class="event-meta">48hr challenge · All levels <span class="chip chip-green" style="margin-left:.4rem">Challenge</span></div></div>
             </div>
             <div class="event-row" onclick="navigateTo('calendar')">
-              <div class="event-date-col">
-                <div class="event-date-d">12</div>
-                <div class="event-date-m">Apr</div>
-              </div>
-              <div>
-                <div class="event-title">Regional Robotics Championship</div>
-                <div class="event-meta">Register by Apr 5 <span class="chip chip-accent" style="margin-left:.4rem">Competition</span></div>
-              </div>
+              <div class="event-date-col"><div class="event-date-d">12</div><div class="event-date-m">Apr</div></div>
+              <div><div class="event-title">Regional Robotics Championship</div><div class="event-meta">Register by Apr 5 <span class="chip chip-accent" style="margin-left:.4rem">Competition</span></div></div>
             </div>
             <div class="event-row" onclick="navigateTo('calendar')">
-              <div class="event-date-col">
-                <div class="event-date-d">25</div>
-                <div class="event-date-m">Apr</div>
-              </div>
-              <div>
-                <div class="event-title">Spring Showcase Demo Day</div>
-                <div class="event-meta">Industry judges · Public <span class="chip chip-accent" style="margin-left:.4rem">Competition</span></div>
-              </div>
+              <div class="event-date-col"><div class="event-date-d">25</div><div class="event-date-m">Apr</div></div>
+              <div><div class="event-title">Spring Showcase Demo Day</div><div class="event-meta">Industry judges · Public <span class="chip chip-accent" style="margin-left:.4rem">Competition</span></div></div>
             </div>
           </div>
         </div>
@@ -718,73 +2932,44 @@
     <div id="page-chat" class="app-page" style="padding:1rem">
       <div class="chat-shell">
         <div class="chat-left">
-          <div class="chat-left-header">
-            <div class="chat-left-title">Channels</div>
-          </div>
-
+          <div class="chat-left-header"><div class="chat-left-title">Channels</div></div>
           <div class="chat-room-row active" data-room="general" onclick="switchChatRoom('general')">
             <div class="chat-room-icon-sq">#</div>
-            <div class="chat-room-info">
-              <div class="chat-room-name">general</div>
-              <div class="chat-room-last">Alex: No crashes! 🎉</div>
-            </div>
+            <div class="chat-room-info"><div class="chat-room-name">general</div><div class="chat-room-last">Alex: No crashes! 🎉</div></div>
           </div>
           <div class="chat-room-row" data-room="ai-team" onclick="switchChatRoom('ai-team')">
             <div class="chat-room-icon-sq">#</div>
-            <div class="chat-room-info">
-              <div class="chat-room-name">ai-team</div>
-              <div class="chat-room-last">Sam: mAP jumped to 81%!</div>
-            </div>
+            <div class="chat-room-info"><div class="chat-room-name">ai-team</div><div class="chat-room-last">Sam: mAP jumped to 81%!</div></div>
             <span class="chat-room-badge">2</span>
           </div>
           <div class="chat-room-row" data-room="mechanical" onclick="switchChatRoom('mechanical')">
             <div class="chat-room-icon-sq">#</div>
-            <div class="chat-room-info">
-              <div class="chat-room-name">mechanical</div>
-              <div class="chat-room-last">Jordan: Reduced weight by 400g</div>
-            </div>
+            <div class="chat-room-info"><div class="chat-room-name">mechanical</div><div class="chat-room-last">Jordan: Reduced weight by 400g</div></div>
             <span class="chat-room-badge">1</span>
           </div>
           <div class="chat-room-row" data-room="mentors" onclick="switchChatRoom('mentors')">
             <div class="chat-room-icon-sq" style="background:var(--accent-dim);color:var(--accent)">★</div>
-            <div class="chat-room-info">
-              <div class="chat-room-name">mentors</div>
-              <div class="chat-room-last">Sam: All teams on track!</div>
-            </div>
+            <div class="chat-room-info"><div class="chat-room-name">mentors</div><div class="chat-room-last">Sam: All teams on track!</div></div>
           </div>
-
           <div style="padding:.625rem 1rem .375rem;font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)">Direct Messages</div>
-
           <div class="chat-room-row" data-room="dm-maya" onclick="switchChatRoom('dm-maya')">
             <div class="sidebar-avatar" style="background:#16a34a;width:34px;height:34px;font-size:.6875rem;border-radius:8px">MR</div>
-            <div class="chat-room-info">
-              <div class="chat-room-name">Maya Rodriguez <span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;margin-left:.3rem;margin-bottom:1px"></span></div>
-              <div class="chat-room-last">Let's sync on the thruster</div>
-            </div>
+            <div class="chat-room-info"><div class="chat-room-name">Maya Rodriguez <span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;margin-left:.3rem;margin-bottom:1px"></span></div><div class="chat-room-last">Let's sync on the thruster</div></div>
           </div>
           <div class="chat-room-row" data-room="dm-jordan" onclick="switchChatRoom('dm-jordan')">
             <div class="sidebar-avatar" style="background:#7c3aed;width:34px;height:34px;font-size:.6875rem;border-radius:8px">JK</div>
-            <div class="chat-room-info">
-              <div class="chat-room-name">Jordan Kim</div>
-              <div class="chat-room-last">Check the updated CAD file</div>
-            </div>
+            <div class="chat-room-info"><div class="chat-room-name">Jordan Kim</div><div class="chat-room-last">Check the updated CAD file</div></div>
           </div>
         </div>
-
         <div class="chat-right">
           <div class="chat-right-header">
-            <div>
-              <div class="chat-right-title" id="chat-room-name"># general</div>
-              <div class="chat-right-meta">General discussion for all studio members · 247 members</div>
-            </div>
+            <div><div class="chat-right-title" id="chat-room-name"># general</div><div class="chat-right-meta">General discussion for all studio members · 247 members</div></div>
             <div style="display:flex;gap:.25rem">
               <button class="icon-btn btn-ghost" style="font-size:.75rem">📌</button>
               <button class="icon-btn btn-ghost" style="font-size:.75rem">👥</button>
             </div>
           </div>
-
           <div class="chat-messages-list" id="chat-messages"></div>
-
           <div class="chat-input-bar">
             <div class="chat-input-wrap">
               <textarea class="chat-textarea" id="chat-input" rows="1" placeholder="Message #general..."></textarea>
@@ -798,73 +2983,37 @@
     <!-- CALENDAR -->
     <div id="page-calendar" class="app-page">
       <div class="page-header">
-        <div class="page-header-left">
-          <div class="page-title">Calendar</div>
-          <div class="page-sub">Competitions, workshops &amp; challenges</div>
-        </div>
+        <div class="page-header-left"><div class="page-title">Calendar</div><div class="page-sub">Competitions, workshops &amp; challenges</div></div>
         <button class="btn btn-accent">+ Add event</button>
       </div>
-
       <div class="calendar-layout">
         <div class="cal-grid">
           <div class="cal-grid-header">
             <span class="cal-month-title" id="cal-month">April 2026</span>
-            <div class="cal-nav">
-              <button class="cal-nav-btn" onclick="changeMonth(-1)">◀</button>
-              <button class="cal-nav-btn" onclick="changeMonth(1)">▶</button>
-            </div>
+            <div class="cal-nav"><button class="cal-nav-btn" onclick="changeMonth(-1)">◀</button><button class="cal-nav-btn" onclick="changeMonth(1)">▶</button></div>
           </div>
           <div class="cal-day-headers">
-            <div class="cal-day-header-cell">Sun</div>
-            <div class="cal-day-header-cell">Mon</div>
-            <div class="cal-day-header-cell">Tue</div>
-            <div class="cal-day-header-cell">Wed</div>
-            <div class="cal-day-header-cell">Thu</div>
-            <div class="cal-day-header-cell">Fri</div>
-            <div class="cal-day-header-cell">Sat</div>
+            <div class="cal-day-header-cell">Sun</div><div class="cal-day-header-cell">Mon</div><div class="cal-day-header-cell">Tue</div><div class="cal-day-header-cell">Wed</div><div class="cal-day-header-cell">Thu</div><div class="cal-day-header-cell">Fri</div><div class="cal-day-header-cell">Sat</div>
           </div>
           <div id="calendar-cells" class="cal-cells"></div>
         </div>
-
         <div style="display:flex;flex-direction:column;gap:1rem">
           <div class="card">
             <div class="card-header"><span class="card-title">All Events</span></div>
             <div class="card-body" style="padding:.625rem 1rem">
-              <div class="event-row" onclick="navigateTo('calendar')">
-                <div class="event-date-col"><div class="event-date-d">3</div><div class="event-date-m">Apr</div></div>
-                <div><div class="event-title">Python &amp; ROS2 Workshop</div><div class="event-meta">2:00 PM · Online</div></div>
-              </div>
-              <div class="event-row">
-                <div class="event-date-col"><div class="event-date-d">8</div><div class="event-date-m">Apr</div></div>
-                <div><div class="event-title">Circuit Design Sprint</div><div class="event-meta">48hr Challenge</div></div>
-              </div>
-              <div class="event-row">
-                <div class="event-date-col"><div class="event-date-d">12</div><div class="event-date-m">Apr</div></div>
-                <div><div class="event-title">Regional Championship</div><div class="event-meta">Register by Apr 5</div></div>
-              </div>
-              <div class="event-row">
-                <div class="event-date-col"><div class="event-date-d">18</div><div class="event-date-m">Apr</div></div>
-                <div><div class="event-title">Computer Vision Bootcamp</div><div class="event-meta">Workshop · All day</div></div>
-              </div>
-              <div class="event-row" style="border-bottom:none">
-                <div class="event-date-col"><div class="event-date-d">25</div><div class="event-date-m">Apr</div></div>
-                <div><div class="event-title">Spring Showcase Demo Day</div><div class="event-meta">Industry judges</div></div>
-              </div>
+              <div class="event-row"><div class="event-date-col"><div class="event-date-d">3</div><div class="event-date-m">Apr</div></div><div><div class="event-title">Python &amp; ROS2 Workshop</div><div class="event-meta">2:00 PM · Online</div></div></div>
+              <div class="event-row"><div class="event-date-col"><div class="event-date-d">8</div><div class="event-date-m">Apr</div></div><div><div class="event-title">Circuit Design Sprint</div><div class="event-meta">48hr Challenge</div></div></div>
+              <div class="event-row"><div class="event-date-col"><div class="event-date-d">12</div><div class="event-date-m">Apr</div></div><div><div class="event-title">Regional Championship</div><div class="event-meta">Register by Apr 5</div></div></div>
+              <div class="event-row"><div class="event-date-col"><div class="event-date-d">18</div><div class="event-date-m">Apr</div></div><div><div class="event-title">Computer Vision Bootcamp</div><div class="event-meta">Workshop · All day</div></div></div>
+              <div class="event-row" style="border-bottom:none"><div class="event-date-col"><div class="event-date-d">25</div><div class="event-date-m">Apr</div></div><div><div class="event-title">Spring Showcase Demo Day</div><div class="event-meta">Industry judges</div></div></div>
             </div>
           </div>
-
           <div class="card">
             <div class="card-header"><span class="card-title">Your RSVPs</span></div>
             <div class="card-body">
               <p style="font-size:.8125rem;color:var(--text-3);margin-bottom:.75rem">You're registered for 2 events</p>
-              <div style="display:flex;align-items:center;gap:.625rem;padding:.5rem 0;border-bottom:1px solid var(--border)">
-                <span class="chip chip-accent">Comp</span>
-                <span style="font-size:.8125rem">Regional Championship</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:.625rem;padding:.5rem 0">
-                <span class="chip chip-accent">Demo</span>
-                <span style="font-size:.8125rem">Spring Showcase</span>
-              </div>
+              <div style="display:flex;align-items:center;gap:.625rem;padding:.5rem 0;border-bottom:1px solid var(--border)"><span class="chip chip-accent">Comp</span><span style="font-size:.8125rem">Regional Championship</span></div>
+              <div style="display:flex;align-items:center;gap:.625rem;padding:.5rem 0"><span class="chip chip-accent">Demo</span><span style="font-size:.8125rem">Spring Showcase</span></div>
             </div>
           </div>
         </div>
@@ -874,13 +3023,9 @@
     <!-- RESOURCES -->
     <div id="page-resources" class="app-page">
       <div class="page-header">
-        <div class="page-header-left">
-          <div class="page-title">Resource Library</div>
-          <div class="page-sub">Tutorials, guides, and templates from the community</div>
-        </div>
+        <div class="page-header-left"><div class="page-title">Resource Library</div><div class="page-sub">Tutorials, guides, and templates from the community</div></div>
         <button class="btn btn-accent">+ Contribute</button>
       </div>
-
       <div class="resources-layout">
         <div class="resources-sidebar-nav">
           <div style="font-size:.6875rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3);padding:.25rem .625rem .625rem;margin-bottom:.25rem">Topics</div>
@@ -892,9 +3037,9 @@
           <div class="res-cat" data-topic="firmware" onclick="filterResources('firmware')">🔧 Firmware</div>
           <div class="divider"></div>
           <div style="font-size:.6875rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3);padding:.25rem .625rem .625rem">Level</div>
-          <div class="res-cat" onclick="">🌱 Beginner</div>
-          <div class="res-cat" onclick="">⚡ Intermediate</div>
-          <div class="res-cat" onclick="">🔥 Advanced</div>
+          <div class="res-cat">🌱 Beginner</div>
+          <div class="res-cat">⚡ Intermediate</div>
+          <div class="res-cat">🔥 Advanced</div>
         </div>
         <div class="resources-grid" id="resources-grid"></div>
       </div>
@@ -903,20 +3048,12 @@
     <!-- LEADERBOARD -->
     <div id="page-leaderboard" class="app-page">
       <div class="page-header">
-        <div class="page-header-left">
-          <div class="page-title">Leaderboard</div>
-          <div class="page-sub">Top contributors this month</div>
-        </div>
-        <div style="display:flex;gap:.375rem">
-          <button class="filter-tab active">This month</button>
-          <button class="filter-tab">All time</button>
-        </div>
+        <div class="page-header-left"><div class="page-title">Leaderboard</div><div class="page-sub">Top contributors this month</div></div>
+        <div style="display:flex;gap:.375rem"><button class="filter-tab active">This month</button><button class="filter-tab">All time</button></div>
       </div>
-
       <div class="leaderboard-layout">
         <div>
-          <!-- Podium -->
-          <div style="display:flex;justify-content:center;align-items:flex-end;gap:1.5rem;margin-bottom:2rem;padding:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:12px">
+          <div style="display:flex;justify-content:center;align-items:flex-end;gap:1.5rem;margin-bottom:2rem;padding:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
             <div style="text-align:center">
               <div class="sidebar-avatar" style="background:#16a34a;width:52px;height:52px;font-size:.9rem;margin:0 auto .75rem">MR</div>
               <div style="font-size:.8125rem;font-weight:600">Maya Rodriguez</div>
@@ -939,73 +3076,15 @@
               <div style="height:48px;width:72px;background:var(--bg-2);border-radius:6px 6px 0 0;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:1rem;border:1px solid var(--border)">🥉</div>
             </div>
           </div>
-
           <div class="lb-table">
-            <div class="lb-row header">
-              <span class="t-label">Rank</span>
-              <span class="t-label">Member</span>
-              <span class="t-label">Badges</span>
-              <span class="t-label">Points</span>
-              <span class="t-label">Change</span>
-            </div>
-            <div class="lb-row" onclick="openProfile(4)" style="border-left:3px solid #d97706">
-              <span class="lb-rank gold">1</span>
-              <div class="lb-user">
-                <div class="sidebar-avatar" style="background:#2563eb;width:32px;height:32px;font-size:.7rem">SP</div>
-                <div><div class="lb-user-name">Sam Patel</div><div class="lb-user-school">CMU · Mentor</div></div>
-              </div>
-              <div class="lb-badges-cell">
-                <span class="lb-badge-sm">🏆</span><span class="lb-badge-sm">👑</span><span class="lb-badge-sm">⚡</span>
-              </div>
-              <span class="lb-points">6,200</span>
-              <span class="lb-change up">↑ 420</span>
-            </div>
-            <div class="lb-row" onclick="openProfile(2)">
-              <span class="lb-rank silver">2</span>
-              <div class="lb-user">
-                <div class="sidebar-avatar" style="background:#16a34a;width:32px;height:32px;font-size:.7rem">MR</div>
-                <div><div class="lb-user-name">Maya Rodriguez</div><div class="lb-user-school">Stanford · Builder</div></div>
-              </div>
-              <div class="lb-badges-cell">
-                <span class="lb-badge-sm">⚡</span><span class="lb-badge-sm">🔥</span><span class="lb-badge-sm">🎯</span>
-              </div>
-              <span class="lb-points">3,920</span>
-              <span class="lb-change up">↑ 280</span>
-            </div>
-            <div class="lb-row" onclick="openProfile(3)">
-              <span class="lb-rank bronze">3</span>
-              <div class="lb-user">
-                <div class="sidebar-avatar" style="background:#7c3aed;width:32px;height:32px;font-size:.7rem">JK</div>
-                <div><div class="lb-user-name">Jordan Kim</div><div class="lb-user-school">CalTech · Designer</div></div>
-              </div>
-              <div class="lb-badges-cell"><span class="lb-badge-sm">🎨</span><span class="lb-badge-sm">🔥</span></div>
-              <span class="lb-points">3,540</span>
-              <span class="lb-change up">↑ 190</span>
-            </div>
-            <div class="lb-row" onclick="openProfile(1)">
-              <span class="lb-rank">4</span>
-              <div class="lb-user">
-                <div class="sidebar-avatar" style="background:#e55b2d;width:32px;height:32px;font-size:.7rem">AC</div>
-                <div><div class="lb-user-name">Alex Chen</div><div class="lb-user-school">MIT · Team Lead</div></div>
-              </div>
-              <div class="lb-badges-cell"><span class="lb-badge-sm">🏆</span><span class="lb-badge-sm">🤖</span></div>
-              <span class="lb-points">4,850</span>
-              <span class="lb-change up">↑ 150</span>
-            </div>
-            <div class="lb-row" onclick="openProfile(6)">
-              <span class="lb-rank">5</span>
-              <div class="lb-user">
-                <div class="sidebar-avatar" style="background:#0891b2;width:32px;height:32px;font-size:.7rem">CM</div>
-                <div><div class="lb-user-name">Casey Morrison</div><div class="lb-user-school">UT Austin · Builder</div></div>
-              </div>
-              <div class="lb-badges-cell"><span class="lb-badge-sm">⚡</span></div>
-              <span class="lb-points">2,760</span>
-              <span class="lb-change down">↓ 20</span>
-            </div>
+            <div class="lb-row header"><span class="t-label">Rank</span><span class="t-label">Member</span><span class="t-label">Badges</span><span class="t-label">Points</span><span class="t-label">Change</span></div>
+            <div class="lb-row" onclick="openProfile(4)" style="border-left:3px solid #d97706"><span class="lb-rank gold">1</span><div class="lb-user"><div class="sidebar-avatar" style="background:#2563eb;width:32px;height:32px;font-size:.7rem">SP</div><div><div class="lb-user-name">Sam Patel</div><div class="lb-user-school">CMU · Mentor</div></div></div><div class="lb-badges-cell"><span class="lb-badge-sm">🏆</span><span class="lb-badge-sm">👑</span><span class="lb-badge-sm">⚡</span></div><span class="lb-points">6,200</span><span class="lb-change up">↑ 420</span></div>
+            <div class="lb-row" onclick="openProfile(2)"><span class="lb-rank silver">2</span><div class="lb-user"><div class="sidebar-avatar" style="background:#16a34a;width:32px;height:32px;font-size:.7rem">MR</div><div><div class="lb-user-name">Maya Rodriguez</div><div class="lb-user-school">Stanford · Builder</div></div></div><div class="lb-badges-cell"><span class="lb-badge-sm">⚡</span><span class="lb-badge-sm">🔥</span><span class="lb-badge-sm">🎯</span></div><span class="lb-points">3,920</span><span class="lb-change up">↑ 280</span></div>
+            <div class="lb-row" onclick="openProfile(3)"><span class="lb-rank bronze">3</span><div class="lb-user"><div class="sidebar-avatar" style="background:#7c3aed;width:32px;height:32px;font-size:.7rem">JK</div><div><div class="lb-user-name">Jordan Kim</div><div class="lb-user-school">CalTech · Designer</div></div></div><div class="lb-badges-cell"><span class="lb-badge-sm">🎨</span><span class="lb-badge-sm">🔥</span></div><span class="lb-points">3,540</span><span class="lb-change up">↑ 190</span></div>
+            <div class="lb-row" onclick="openProfile(1)"><span class="lb-rank">4</span><div class="lb-user"><div class="sidebar-avatar" style="background:#e55b2d;width:32px;height:32px;font-size:.7rem">AC</div><div><div class="lb-user-name">Alex Chen</div><div class="lb-user-school">MIT · Team Lead</div></div></div><div class="lb-badges-cell"><span class="lb-badge-sm">🏆</span><span class="lb-badge-sm">🤖</span></div><span class="lb-points">4,850</span><span class="lb-change up">↑ 150</span></div>
+            <div class="lb-row" onclick="openProfile(6)"><span class="lb-rank">5</span><div class="lb-user"><div class="sidebar-avatar" style="background:#0891b2;width:32px;height:32px;font-size:.7rem">CM</div><div><div class="lb-user-name">Casey Morrison</div><div class="lb-user-school">UT Austin · Builder</div></div></div><div class="lb-badges-cell"><span class="lb-badge-sm">⚡</span></div><span class="lb-points">2,760</span><span class="lb-change down">↓ 20</span></div>
           </div>
         </div>
-
-        <!-- Right Panel -->
         <div style="display:flex;flex-direction:column;gap:1rem">
           <div class="card">
             <div class="card-header"><span class="card-title">Badges</span></div>
@@ -1023,26 +3102,13 @@
               </div>
             </div>
           </div>
-
           <div class="card">
             <div class="card-header"><span class="card-title">Your Skills</span></div>
             <div class="card-body">
-              <div class="skill-bar-item">
-                <div class="skill-bar-header"><span class="skill-bar-label">Python / ROS2</span><span class="skill-bar-pct">92%</span></div>
-                <div class="skill-bar-track"><div class="skill-bar-fill" data-width="92%"></div></div>
-              </div>
-              <div class="skill-bar-item">
-                <div class="skill-bar-header"><span class="skill-bar-label">Machine Learning</span><span class="skill-bar-pct">85%</span></div>
-                <div class="skill-bar-track"><div class="skill-bar-fill" data-width="85%"></div></div>
-              </div>
-              <div class="skill-bar-item">
-                <div class="skill-bar-header"><span class="skill-bar-label">CAD / Fusion360</span><span class="skill-bar-pct">70%</span></div>
-                <div class="skill-bar-track"><div class="skill-bar-fill" data-width="70%"></div></div>
-              </div>
-              <div class="skill-bar-item" style="margin-bottom:0">
-                <div class="skill-bar-header"><span class="skill-bar-label">Electronics</span><span class="skill-bar-pct">60%</span></div>
-                <div class="skill-bar-track"><div class="skill-bar-fill" data-width="60%"></div></div>
-              </div>
+              <div class="skill-bar-item"><div class="skill-bar-header"><span class="skill-bar-label">Python / ROS2</span><span class="skill-bar-pct">92%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-width="92%"></div></div></div>
+              <div class="skill-bar-item"><div class="skill-bar-header"><span class="skill-bar-label">Machine Learning</span><span class="skill-bar-pct">85%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-width="85%"></div></div></div>
+              <div class="skill-bar-item"><div class="skill-bar-header"><span class="skill-bar-label">CAD / Fusion360</span><span class="skill-bar-pct">70%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-width="70%"></div></div></div>
+              <div class="skill-bar-item" style="margin-bottom:0"><div class="skill-bar-header"><span class="skill-bar-label">Electronics</span><span class="skill-bar-pct">60%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-width="60%"></div></div></div>
             </div>
           </div>
         </div>
@@ -1054,62 +3120,30 @@
       <div class="about-hero">
         <span class="t-label">Our story</span>
         <h1 class="about-hero-h">Built for builders,<br>by <em>builders.</em></h1>
-        <p style="font-size:.9375rem;color:var(--text-2);line-height:1.7;max-width:560px">
+        <p style="font-size:.9375rem;color:var(--text-2);line-height:1.6;max-width:560px">
           Build Robotics Studio was founded by a small group of engineers who wanted one place to collaborate, learn, and compete together. We believe robotics education should be open, community-driven, and genuinely fun.
         </p>
       </div>
-
       <div style="margin-bottom:2.5rem">
         <div style="font-size:.8125rem;font-weight:600;color:var(--text-1);margin-bottom:1rem">Mission &amp; values</div>
         <div class="mission-cards">
-          <div class="mission-card">
-            <div class="mission-card-label">Mission</div>
-            <div class="mission-card-body">Democratize robotics education by providing a collaborative platform where anyone — from curious beginners to experienced engineers — can build, learn, and grow together.</div>
-          </div>
-          <div class="mission-card">
-            <div class="mission-card-label">Vision</div>
-            <div class="mission-card-body">A world where the next generation of roboticists has every resource, connection, and opportunity they need to build robots that change the world for the better.</div>
-          </div>
-          <div class="mission-card">
-            <div class="mission-card-label">Values</div>
-            <div class="mission-card-body">Open collaboration. Radical inclusion. Learning in public. Shipping real things. Celebrating failure as a necessary step on the way to success.</div>
-          </div>
+          <div class="mission-card"><div class="mission-card-label">Mission</div><div class="mission-card-body">Democratize robotics education by providing a collaborative platform where anyone — from curious beginners to experienced engineers — can build, learn, and grow together.</div></div>
+          <div class="mission-card"><div class="mission-card-label">Vision</div><div class="mission-card-body">A world where the next generation of roboticists has every resource, connection, and opportunity they need to build robots that change the world for the better.</div></div>
+          <div class="mission-card"><div class="mission-card-label">Values</div><div class="mission-card-body">Open collaboration. Radical inclusion. Learning in public. Shipping real things. Celebrating failure as a necessary step on the way to success.</div></div>
         </div>
       </div>
-
       <div style="margin-bottom:2.5rem">
         <div style="font-size:.8125rem;font-weight:600;color:var(--text-1);margin-bottom:1rem">Leadership team</div>
         <div class="team-grid">
-          <div class="team-card" onclick="openProfile(4)">
-            <div class="team-av" style="background:#2563eb">SP</div>
-            <div class="team-name">Sam Patel</div>
-            <div class="team-role">Director &amp; Lead Mentor</div>
-            <div class="team-school">CMU · AI/ML Engineer</div>
-          </div>
-          <div class="team-card" onclick="openProfile(1)">
-            <div class="team-av" style="background:#e55b2d">AC</div>
-            <div class="team-name">Alex Chen</div>
-            <div class="team-role">Technical Lead</div>
-            <div class="team-school">MIT · Robotics Engineer</div>
-          </div>
-          <div class="team-card" onclick="openProfile(2)">
-            <div class="team-av" style="background:#16a34a">MR</div>
-            <div class="team-name">Maya Rodriguez</div>
-            <div class="team-role">Hardware Lead</div>
-            <div class="team-school">Stanford · Electronics</div>
-          </div>
-          <div class="team-card" onclick="openProfile(3)">
-            <div class="team-av" style="background:#7c3aed">JK</div>
-            <div class="team-name">Jordan Kim</div>
-            <div class="team-role">Design Lead</div>
-            <div class="team-school">CalTech · Mechanical</div>
-          </div>
+          <div class="team-card" onclick="openProfile(4)"><div class="team-av" style="background:#2563eb">SP</div><div class="team-name">Sam Patel</div><div class="team-role">Director &amp; Lead Mentor</div><div class="team-school">CMU · AI/ML Engineer</div></div>
+          <div class="team-card" onclick="openProfile(1)"><div class="team-av" style="background:#e55b2d">AC</div><div class="team-name">Alex Chen</div><div class="team-role">Technical Lead</div><div class="team-school">MIT · Robotics Engineer</div></div>
+          <div class="team-card" onclick="openProfile(2)"><div class="team-av" style="background:#16a34a">MR</div><div class="team-name">Maya Rodriguez</div><div class="team-role">Hardware Lead</div><div class="team-school">Stanford · Electronics</div></div>
+          <div class="team-card" onclick="openProfile(3)"><div class="team-av" style="background:#7c3aed">JK</div><div class="team-name">Jordan Kim</div><div class="team-role">Design Lead</div><div class="team-school">CalTech · Mechanical</div></div>
         </div>
       </div>
-
       <div class="card card-padded" style="text-align:center;padding:2.5rem">
         <div style="font-size:1.5rem;margin-bottom:.75rem">📬</div>
-        <div style="font-family:var(--font-serif);font-size:1.375rem;letter-spacing:-0.015em;margin-bottom:.625rem">Want to work with us?</div>
+        <div style="font-family:var(--font-serif);font-size:1.375rem;letter-spacing:-0.02em;margin-bottom:.625rem">Want to work with us?</div>
         <p style="font-size:.875rem;color:var(--text-2);max-width:400px;margin:0 auto 1.75rem;line-height:1.6">Mentorship, sponsorship, or partnership opportunities. We'd love to hear from you.</p>
         <div style="display:flex;gap:.625rem;justify-content:center;flex-wrap:wrap">
           <button class="btn btn-accent" onclick="showToast('info','Email','Opening your email client...')">✉ hello@buildrobotics.studio</button>
@@ -1129,167 +3163,70 @@
     <span class="notif-panel-title">Notifications</span>
     <span class="notif-mark-read" onclick="markAllRead()">Mark all read</span>
   </div>
-  <div class="notif-item unread">
-    <div class="notif-av" style="background:var(--accent-dim);font-size:1rem">💬</div>
-    <div><div class="notif-text"><strong>Alex Chen</strong> mentioned you in <strong>#general</strong></div><div class="notif-time">2m ago</div></div>
-  </div>
-  <div class="notif-item unread">
-    <div class="notif-av" style="background:var(--green-bg);font-size:1rem">✅</div>
-    <div><div class="notif-text">Task completed in <strong>Autonomous Pathfinder</strong></div><div class="notif-time">14m ago</div></div>
-  </div>
-  <div class="notif-item unread">
-    <div class="notif-av" style="background:var(--blue-bg);font-size:1rem">👋</div>
-    <div><div class="notif-text">New member <strong>Devon Wells</strong> joined the studio</div><div class="notif-time">1h ago</div></div>
-  </div>
-  <div class="notif-item">
-    <div class="notif-av" style="background:var(--amber-bg);font-size:1rem">📅</div>
-    <div><div class="notif-text">Reminder: <strong>Python &amp; ROS2 Workshop</strong> is tomorrow</div><div class="notif-time">2h ago</div></div>
-  </div>
-  <div class="notif-item">
-    <div class="notif-av" style="background:var(--accent-dim);font-size:1rem">🏅</div>
-    <div><div class="notif-text">You earned the <strong>Early Adopter</strong> badge ⚡</div><div class="notif-time">3h ago</div></div>
-  </div>
+  <div class="notif-item unread"><div class="notif-av" style="background:var(--accent-dim);font-size:1rem">💬</div><div><div class="notif-text"><strong>Alex Chen</strong> mentioned you in <strong>#general</strong></div><div class="notif-time">2m ago</div></div></div>
+  <div class="notif-item unread"><div class="notif-av" style="background:var(--green-bg);font-size:1rem">✅</div><div><div class="notif-text">Task completed in <strong>Autonomous Pathfinder</strong></div><div class="notif-time">14m ago</div></div></div>
+  <div class="notif-item unread"><div class="notif-av" style="background:var(--blue-bg);font-size:1rem">👋</div><div><div class="notif-text">New member <strong>Devon Wells</strong> joined the studio</div><div class="notif-time">1h ago</div></div></div>
+  <div class="notif-item"><div class="notif-av" style="background:var(--amber-bg);font-size:1rem">📅</div><div><div class="notif-text">Reminder: <strong>Python &amp; ROS2 Workshop</strong> is tomorrow</div><div class="notif-time">2h ago</div></div></div>
+  <div class="notif-item"><div class="notif-av" style="background:var(--accent-dim);font-size:1rem">🏅</div><div><div class="notif-text">You earned the <strong>Early Adopter</strong> badge ⚡</div><div class="notif-time">3h ago</div></div></div>
 </div>
 
 <!-- ======================================================
      MODALS
      ====================================================== -->
-
-<!-- New Project -->
 <div id="new-project-modal" class="modal-backdrop" onclick="if(event.target===this)closeModal('new-project-modal')">
   <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title">Create new project</span>
-      <button class="modal-close" onclick="closeModal('new-project-modal')">✕</button>
-    </div>
+    <div class="modal-header"><span class="modal-title">Create new project</span><button class="modal-close" onclick="closeModal('new-project-modal')">✕</button></div>
     <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">Project name</label>
-        <input type="text" class="form-input" id="new-proj-name" placeholder="e.g. Autonomous Drone Swarm" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Description</label>
-        <textarea class="form-textarea" id="new-proj-desc" placeholder="What are you building? What problem does it solve?"></textarea>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Category</label>
-        <select class="form-select" id="new-proj-category">
-          <option value="autonomous">Autonomous</option>
-          <option value="mechanical">Mechanical</option>
-          <option value="ai">AI / ML</option>
-          <option value="electronics">Electronics</option>
-          <option value="biotech">Biotech</option>
-          <option value="software">Software</option>
-        </select>
-      </div>
-      <div class="form-group" style="margin-bottom:0">
-        <label class="form-label">Team size</label>
-        <select class="form-select">
-          <option>Solo (just me)</option>
-          <option>Small (2–3 people)</option>
-          <option>Team (4–6 people)</option>
-          <option>Large (7+ people)</option>
-        </select>
-      </div>
+      <div class="form-group"><label class="form-label">Project name</label><input type="text" class="form-input" id="new-proj-name" placeholder="e.g. Autonomous Drone Swarm" /></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="new-proj-desc" placeholder="What are you building? What problem does it solve?"></textarea></div>
+      <div class="form-group"><label class="form-label">Category</label><select class="form-select" id="new-proj-category"><option value="autonomous">Autonomous</option><option value="mechanical">Mechanical</option><option value="ai">AI / ML</option><option value="electronics">Electronics</option><option value="biotech">Biotech</option><option value="software">Software</option></select></div>
+      <div class="form-group" style="margin-bottom:0"><label class="form-label">Team size</label><select class="form-select"><option>Solo (just me)</option><option>Small (2–3 people)</option><option>Team (4–6 people)</option><option>Large (7+ people)</option></select></div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('new-project-modal')">Cancel</button>
-      <button class="btn btn-accent" onclick="submitNewProject()">Create project</button>
-    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('new-project-modal')">Cancel</button><button class="btn btn-accent" onclick="submitNewProject()">Create project</button></div>
   </div>
 </div>
 
-<!-- Project Detail -->
 <div id="project-detail-modal" class="modal-backdrop" onclick="if(event.target===this)closeModal('project-detail-modal')">
   <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title" id="modal-proj-title">Project</span>
-      <button class="modal-close" onclick="closeModal('project-detail-modal')">✕</button>
-    </div>
+    <div class="modal-header"><span class="modal-title" id="modal-proj-title">Project</span><button class="modal-close" onclick="closeModal('project-detail-modal')">✕</button></div>
     <div class="modal-body">
-      <div style="text-align:center;margin-bottom:1.5rem">
-        <div id="modal-proj-emoji" style="font-size:3rem;margin-bottom:.75rem">🤖</div>
-        <span id="modal-proj-status"></span>
-      </div>
-      <div class="form-group">
-        <div class="form-label">Description</div>
-        <div id="modal-proj-desc" style="font-size:.875rem;color:var(--text-2);line-height:1.65"></div>
-      </div>
-      <div class="form-group">
-        <div class="form-label">Tags</div>
-        <div id="modal-proj-tags" style="display:flex;gap:.375rem;flex-wrap:wrap"></div>
-      </div>
-      <div class="form-group">
-        <div style="display:flex;justify-content:space-between;margin-bottom:.5rem">
-          <span class="form-label" style="margin-bottom:0">Progress</span>
-          <span id="modal-proj-progress" style="font-family:var(--font-mono);font-size:.8125rem;color:var(--text-2)"></span>
-        </div>
-        <div class="prog-bar" style="height:6px">
-          <div id="modal-proj-progress-bar" class="prog-fill" style="width:0;transition:width 1s var(--ease-out)"></div>
-        </div>
-      </div>
-      <div>
-        <div class="form-label">Team</div>
-        <div id="modal-proj-members" style="display:flex;flex-direction:column;gap:.5rem"></div>
-      </div>
+      <div style="text-align:center;margin-bottom:1.5rem"><div id="modal-proj-emoji" style="font-size:3rem;margin-bottom:.75rem">🤖</div><span id="modal-proj-status"></span></div>
+      <div class="form-group"><div class="form-label">Description</div><div id="modal-proj-desc" style="font-size:.875rem;color:var(--text-2);line-height:1.6"></div></div>
+      <div class="form-group"><div class="form-label">Tags</div><div id="modal-proj-tags" style="display:flex;gap:.375rem;flex-wrap:wrap"></div></div>
+      <div class="form-group"><div style="display:flex;justify-content:space-between;margin-bottom:.5rem"><span class="form-label" style="margin-bottom:0">Progress</span><span id="modal-proj-progress" style="font-family:var(--font-mono);font-size:.8125rem;color:var(--text-2)"></span></div><div class="prog-bar" style="height:6px"><div id="modal-proj-progress-bar" class="prog-fill" style="width:0;transition:width 1s var(--ease-out)"></div></div></div>
+      <div><div class="form-label">Team</div><div id="modal-proj-members" style="display:flex;flex-direction:column;gap:.5rem"></div></div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('project-detail-modal')">Close</button>
-      <button class="btn btn-accent" onclick="showToast('success','Joined!','Welcome to the team!');closeModal('project-detail-modal')">Join project</button>
-    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('project-detail-modal')">Close</button><button class="btn btn-accent" onclick="showToast('success','Joined!','Welcome to the team!');closeModal('project-detail-modal')">Join project</button></div>
   </div>
 </div>
 
-<!-- Event Modal -->
 <div id="event-modal" class="modal-backdrop" onclick="if(event.target===this)closeModal('event-modal')">
   <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title" id="modal-event-title">Event</span>
-      <button class="modal-close" onclick="closeModal('event-modal')">✕</button>
-    </div>
+    <div class="modal-header"><span class="modal-title" id="modal-event-title">Event</span><button class="modal-close" onclick="closeModal('event-modal')">✕</button></div>
     <div class="modal-body">
-      <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:1rem">
-        <span id="modal-event-type" class="chip"></span>
-        <span id="modal-event-date" style="font-size:.8125rem;color:var(--text-3)"></span>
-      </div>
-      <p id="modal-event-desc" style="font-size:.875rem;color:var(--text-2);line-height:1.65;margin-bottom:1.25rem"></p>
-      <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center">
-        <div style="font-size:.8125rem;color:var(--text-2);margin-bottom:.25rem">RSVP to secure your spot</div>
-        <div style="font-size:.75rem;color:var(--text-3)">27 members already registered</div>
-      </div>
+      <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:1rem"><span id="modal-event-type" class="chip"></span><span id="modal-event-date" style="font-size:.8125rem;color:var(--text-3)"></span></div>
+      <p id="modal-event-desc" style="font-size:.875rem;color:var(--text-2);line-height:1.6;margin-bottom:1.25rem"></p>
+      <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center"><div style="font-size:.8125rem;color:var(--text-2);margin-bottom:.25rem">RSVP to secure your spot</div><div style="font-size:.75rem;color:var(--text-3)">27 members already registered</div></div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('event-modal')">Close</button>
-      <button class="btn btn-accent" onclick="rsvpEvent()">RSVP now</button>
-    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('event-modal')">Close</button><button class="btn btn-accent" onclick="rsvpEvent()">RSVP now</button></div>
   </div>
 </div>
 
-<!-- Profile Modal -->
 <div id="profile-modal" class="modal-backdrop" onclick="if(event.target===this)closeModal('profile-modal')">
   <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title">Member profile</span>
-      <button class="modal-close" onclick="closeModal('profile-modal')">✕</button>
-    </div>
+    <div class="modal-header"><span class="modal-title">Member profile</span><button class="modal-close" onclick="closeModal('profile-modal')">✕</button></div>
     <div class="modal-body" style="text-align:center">
       <div id="modal-profile-initials" class="sidebar-avatar" style="width:64px;height:64px;font-size:1.125rem;margin:0 auto 1rem"></div>
       <h3 id="modal-profile-name" style="font-size:1.0625rem;font-weight:700;letter-spacing:-0.01em;margin-bottom:.25rem"></h3>
       <span id="modal-profile-role" class="chip" style="margin-bottom:.5rem;display:inline-block"></span>
       <div id="modal-profile-school" style="font-size:.8125rem;color:var(--text-3);margin-bottom:1.25rem"></div>
-      <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:.875rem;margin-bottom:1.25rem">
-        <div id="modal-profile-points" style="font-family:var(--font-serif);font-size:1.75rem;color:var(--text-1)"></div>
-        <div class="t-label" style="margin-top:.25rem">total points</div>
-      </div>
+      <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:.875rem;margin-bottom:1.25rem"><div id="modal-profile-points" style="font-family:var(--font-serif);font-size:1.75rem;color:var(--text-1)"></div><div class="t-label" style="margin-top:.25rem">total points</div></div>
       <div class="form-label" style="text-align:left">Skills</div>
       <div id="modal-profile-skills" style="display:flex;flex-wrap:wrap;gap:.375rem;justify-content:center;margin-bottom:1.25rem"></div>
       <div class="form-label" style="text-align:left">Badges</div>
       <div id="modal-profile-badges" style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;font-size:1.5rem"></div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('profile-modal')">Close</button>
-      <button class="btn btn-accent" onclick="navigateTo('chat');closeModal('profile-modal');showToast('info','DM','Opening direct message...')">Message</button>
-    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('profile-modal')">Close</button><button class="btn btn-accent" onclick="navigateTo('chat');closeModal('profile-modal');showToast('info','DM','Opening direct message...')">Message</button></div>
   </div>
 </div>
 
@@ -1299,8 +3236,599 @@
 <!-- ======================================================
      SCRIPTS
      ====================================================== -->
-<script src="js/app.js"></script>
 <script>
+/* ============================================================
+   BUILD ROBOTICS STUDIO — Application Logic
+   ============================================================ */
+
+/* ---- Mock Data ---- */
+const MOCK = {
+  users: [
+    { id:1, name:'Alex Chen',       initials:'AC', role:'lead',     school:'MIT',          points:4850, skills:['Python','ROS2','CAD','ML'],            projects:5, badges:['🏆','⚡','🔥','🎯','🤖'] },
+    { id:2, name:'Maya Rodriguez',  initials:'MR', role:'builder',  school:'Stanford',     points:3920, skills:['Arduino','PCB','Fusion360','C++'],      projects:4, badges:['⚡','🔥','🎯'] },
+    { id:3, name:'Jordan Kim',      initials:'JK', role:'designer', school:'CalTech',      points:3540, skills:['SolidWorks','CAD','FEA','Prototyping'],  projects:3, badges:['🎨','🔥','🎯'] },
+    { id:4, name:'Sam Patel',       initials:'SP', role:'mentor',   school:'CMU',          points:6200, skills:['AI/ML','PyTorch','Computer Vision','Leadership'], projects:8, badges:['🏆','⚡','🔥','🎯','🤖','👑'] },
+    { id:5, name:'Riley Zhang',     initials:'RZ', role:'student',  school:'Georgia Tech', points:1840, skills:['Python','ROS2','Sensors'],              projects:2, badges:['⚡','🌱'] },
+    { id:6, name:'Casey Morrison',  initials:'CM', role:'builder',  school:'UT Austin',    points:2760, skills:['Electronics','SLAM','Embedded C'],       projects:3, badges:['⚡','🔥'] },
+    { id:7, name:'Priya Singh',     initials:'PS', role:'designer', school:'Purdue',       points:2190, skills:['Onshape','GD&T','3D Printing'],         projects:2, badges:['🎨','🌱'] },
+    { id:8, name:'Devon Wells',     initials:'DW', role:'student',  school:'Michigan',     points:980,  skills:['Python basics','Arduino'],              projects:1, badges:['🌱'] },
+  ],
+  projects: [
+    { id:1, name:'Autonomous Pathfinder', emoji:'🤖', desc:'A fully autonomous mobile robot using SLAM navigation and computer vision for obstacle detection in dynamic environments.', tags:['ROS2','CV','SLAM','Python'], status:'active', members:[1,2,5], progress:72, category:'autonomous' },
+    { id:2, name:'HydroBot 3000', emoji:'🌊', desc:'Underwater ROV for marine exploration. Features 6-axis motion control, HD cameras, and real-time telemetry.', tags:['Electronics','C++','CAD'], status:'active', members:[2,3,6], progress:55, category:'mechanical' },
+    { id:3, name:'AI Sorting Arm', emoji:'🦾', desc:'Robotic arm with ML-powered sorting capabilities. Uses YOLOv8 for object detection and classification in real time.', tags:['ML','PyTorch','ROS','Python'], status:'active', members:[4,1,7], progress:40, category:'ai' },
+    { id:4, name:'SwarmBots', emoji:'🐝', desc:'Multi-robot swarm coordination system using emergent behavior algorithms inspired by biological systems.', tags:['Python','AI','Sensors'], status:'planning', members:[1,5,8], progress:15, category:'autonomous' },
+    { id:5, name:'ExoArm Assist', emoji:'💪', desc:'Assistive exoskeleton arm for rehabilitation. EMG-controlled with haptic feedback and adaptive learning.', tags:['Firmware','CAD','ML','C++'], status:'active', members:[3,4,6,7], progress:88, category:'biotech' },
+    { id:6, name:'MARS Rover Sim', emoji:'🚀', desc:'High-fidelity simulation of a Martian surface exploration rover built with ROS2 and Gazebo for competition prep.', tags:['ROS2','Gazebo','Python'], status:'completed', members:[1,2,3,4], progress:100, category:'autonomous' },
+  ],
+  events: [
+    { id:1, name:'Regional Robotics Championship', date:new Date(2026,3,12), type:'competition', desc:'Annual regional competition. All active teams must register by April 5th.' },
+    { id:2, name:'Python & ROS2 Workshop', date:new Date(2026,3,3), type:'workshop', desc:'Beginner-friendly workshop covering ROS2 basics and Python integration.' },
+    { id:3, name:'Weekly Build Challenge', date:new Date(2026,3,4), type:'challenge', desc:'This week: design a gripper that can pick up objects of any shape.' },
+    { id:4, name:'Computer Vision Bootcamp', date:new Date(2026,3,18), type:'workshop', desc:'Deep dive into OpenCV, YOLO, and real-time object detection.' },
+    { id:5, name:'Spring Showcase Demo Day', date:new Date(2026,3,25), type:'competition', desc:'Present your semester project to judges, alumni, and industry sponsors.' },
+    { id:6, name:'Circuit Design Sprint', date:new Date(2026,3,8), type:'challenge', desc:'48-hour PCB design challenge. Winners get featured on the main page!' },
+  ],
+  resources: [
+    { id:1, title:'ROS2 Beginner Complete Guide', type:'tutorial', level:'beginner', desc:'Step-by-step guide to setting up ROS2 Humble and building your first robot nodes.', topic:'software', views:1240, icon:'📖' },
+    { id:2, title:'YOLOv8 Object Detection Integration', type:'tutorial', level:'intermediate', desc:"Integrate YOLO into your robot's vision pipeline with real-time inference on Jetson.", topic:'ai', views:890, icon:'👁️' },
+    { id:3, title:'FRC Robot Project Template', type:'template', level:'beginner', desc:'Complete project scaffold for FRC competition robots. Includes Java WPILib setup.', topic:'firmware', views:650, icon:'📦' },
+    { id:4, title:'Fusion360 for Robotics', type:'video', level:'beginner', desc:'Video series covering CAD modeling for robot chassis, arms, and drive systems.', topic:'mechanical', views:2100, icon:'🎥' },
+    { id:5, title:'SLAM Navigation Deep Dive', type:'guide', level:'advanced', desc:'Comprehensive guide covering GMapping, Cartographer, and Nav2 in ROS2.', topic:'software', views:430, icon:'📋' },
+    { id:6, title:'PID Tuning Cheatsheet', type:'template', level:'intermediate', desc:'Quick reference for PID controller tuning techniques with common robotics examples.', topic:'firmware', views:1560, icon:'⚡' },
+    { id:7, title:'Motor Driver Selection Guide', type:'guide', level:'beginner', desc:'How to pick the right motor controller for your application. Covers L298N to ODrive.', topic:'electronics', views:780, icon:'🔌' },
+    { id:8, title:'Python Machine Learning for Robots', type:'tutorial', level:'intermediate', desc:'Using scikit-learn and PyTorch for robot perception and behavior learning.', topic:'ai', views:1100, icon:'🧠' },
+  ],
+  messages: {
+    'general': [
+      { id:1, userId:2, text:"Hey everyone! Just got the HydroBot thrusters mounted — it actually floats now! 🌊", time:'9:14 AM', date:'Today' },
+      { id:2, userId:4, text:"Incredible progress! Make sure to run the buoyancy tests before adding more components.", time:'9:18 AM', date:'Today' },
+      { id:3, userId:1, text:"Pathfinder completed its first full autonomous run this morning — no crashes! 🎉", time:'9:45 AM', date:'Today' },
+      { id:4, userId:5, text:"That's huge!! Can you share the ROS bag file? Would love to analyze the path planning.", time:'9:47 AM', date:'Today' },
+      { id:5, userId:3, text:"Reminder: design review for ExoArm is tomorrow at 3pm. Please come with your updated STEP files.", time:'10:03 AM', date:'Today' },
+    ],
+    'ai-team': [
+      { id:1, userId:4, text:"New training results are in. mAP jumped from 67% to 81% after adding the augmentation pipeline!", time:'8:30 AM', date:'Today' },
+      { id:2, userId:1, text:"Wow, that's a big jump. What augmentations did you use?", time:'8:35 AM', date:'Today' },
+      { id:3, userId:4, text:"Random crop, color jitter, and mosaic. The mosaic made the biggest difference by far.", time:'8:37 AM', date:'Today' },
+    ],
+    'mechanical': [
+      { id:1, userId:3, text:"Updated the chassis CAD. Reduced total weight by 400g using hollow structural tubes.", time:'7:55 AM', date:'Today' },
+      { id:2, userId:6, text:"Nice! Will that affect the moment of inertia significantly?", time:'8:01 AM', date:'Today' },
+    ],
+    'mentors': [
+      { id:1, userId:4, text:"Mentor check-in: all teams are on track for the April showcase. Great work everyone, keep it up!", time:'Yesterday', date:'Yesterday' },
+    ],
+    'dm-maya': [
+      { id:1, userId:2, text:"Hey! Quick question on the thruster mount — do you have a sec?", time:'2:30 PM', date:'Yesterday' },
+      { id:2, userId:1, text:"Yeah for sure! What's up?", time:'2:32 PM', date:'Yesterday' },
+    ],
+    'dm-jordan': [],
+  },
+};
+
+/* ---- State ---- */
+const state = {
+  currentUser: MOCK.users[0],
+  currentPage: 'dashboard',
+  currentChatRoom: 'general',
+  notifOpen: false,
+};
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+function runLoader() {
+  const bar = document.querySelector('.loader-bar');
+  const status = document.querySelector('.loader-status');
+  const steps = [
+    [20, 'Checking workspace...'],
+    [45, 'Loading projects...'],
+    [65, 'Fetching members...'],
+    [85, 'Almost there...'],
+    [100, 'Ready.'],
+  ];
+  let i = 0;
+  const tick = () => {
+    if (i < steps.length) {
+      const [pct, msg] = steps[i++];
+      bar.style.width = pct + '%';
+      status.textContent = msg;
+      setTimeout(tick, 320 + Math.random() * 180);
+    } else {
+      setTimeout(() => {
+        document.getElementById('loading-screen').classList.add('hidden');
+        document.getElementById('landing-page').style.display = '';
+        initScrollReveal();
+        initCounters();
+      }, 300);
+    }
+  };
+  tick();
+}
+
+/* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+function initScrollReveal() {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+
+/* ============================================================
+   COUNTER ANIMATION
+   ============================================================ */
+function initCounters() {
+  document.querySelectorAll('.count-up').forEach(el => {
+    const target = parseInt(el.dataset.target);
+    const dur = 1800;
+    const start = Date.now();
+    const suffix = el.dataset.suffix || '';
+    const tick = () => {
+      const p = Math.min((Date.now() - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.floor(eased * target).toLocaleString() + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+}
+
+/* ============================================================
+   NAVIGATION (Landing → App)
+   ============================================================ */
+function showLanding() {
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('landing-page').style.display = '';
+  window.scrollTo(0, 0);
+}
+
+function launchApp() {
+  document.getElementById('landing-page').style.display = 'none';
+  document.getElementById('app').classList.add('active');
+  navigateTo('dashboard');
+  setTimeout(() => {
+    animateProgressBars();
+    initCounters();
+  }, 200);
+  showToast('success', `Welcome back, ${state.currentUser.name.split(' ')[0]}!`, '47 members are online right now.');
+}
+
+function navigateTo(page) {
+  document.querySelectorAll('.sidebar-nav-item').forEach(el => el.classList.toggle('active', el.dataset.page === page));
+  document.querySelectorAll('.app-page').forEach(el => el.classList.toggle('active', el.id === 'page-' + page));
+
+  const titles = {
+    dashboard: 'Dashboard', projects: 'Project Hub', profiles: 'Members',
+    chat: 'Chat', calendar: 'Calendar', resources: 'Resources',
+    leaderboard: 'Leaderboard', about: 'About',
+  };
+  const titleEl = document.getElementById('topbar-title');
+  if (titleEl) titleEl.textContent = titles[page] || page;
+  state.currentPage = page;
+
+  if (window.innerWidth <= 768) document.querySelector('.app-sidebar')?.classList.remove('open');
+  if (page === 'dashboard') setTimeout(animateProgressBars, 200);
+  if (page === 'leaderboard') setTimeout(initSkillBars, 200);
+}
+
+/* ============================================================
+   PROGRESS BARS
+   ============================================================ */
+function animateProgressBars() {
+  document.querySelectorAll('.prog-fill[data-width]').forEach(bar => {
+    setTimeout(() => { bar.style.width = bar.dataset.width; }, 80);
+  });
+}
+
+/* ============================================================
+   CHAT
+   ============================================================ */
+function switchChatRoom(roomId) {
+  state.currentChatRoom = roomId;
+  document.querySelectorAll('.chat-room-row').forEach(el => el.classList.toggle('active', el.dataset.room === roomId));
+
+  const names = {
+    'general':'# general', 'ai-team':'# ai-team',
+    'mechanical':'# mechanical', 'mentors':'# mentors',
+    'dm-maya':'Maya Rodriguez', 'dm-jordan':'Jordan Kim',
+  };
+  const metaMap = {
+    'general':'General discussion · 247 members',
+    'ai-team':'AI/ML team channel · 3 members',
+    'mechanical':'Mechanical design channel · 4 members',
+    'mentors':'Mentors only channel · 5 mentors',
+    'dm-maya':'Direct message · Maya Rodriguez',
+    'dm-jordan':'Direct message · Jordan Kim',
+  };
+
+  const nameEl = document.getElementById('chat-room-name');
+  if (nameEl) nameEl.textContent = names[roomId] || roomId;
+
+  const el = document.querySelector('.chat-right-meta');
+  if (el) el.textContent = metaMap[roomId] || '';
+
+  renderMessages(roomId);
+
+  const badge = document.querySelector(`[data-room="${roomId}"] .chat-room-badge`);
+  if (badge) badge.remove();
+}
+
+function renderMessages(roomId) {
+  const container = document.getElementById('chat-messages');
+  if (!container) return;
+  const messages = MOCK.messages[roomId] || [];
+  container.innerHTML = '';
+  let lastDate = '';
+
+  messages.forEach(msg => {
+    const user = MOCK.users.find(u => u.id === msg.userId);
+    if (!user) return;
+    const isOwn = msg.userId === state.currentUser.id;
+    const avatarColors = { 1:'#e55b2d', 2:'#16a34a', 3:'#7c3aed', 4:'#2563eb', 5:'#0891b2', 6:'#d97706', 7:'#db2777', 8:'#64748b' };
+
+    if (msg.date !== lastDate) {
+      lastDate = msg.date;
+      const d = document.createElement('div');
+      d.className = 'chat-date-label';
+      d.textContent = msg.date;
+      container.appendChild(d);
+    }
+
+    const el = document.createElement('div');
+    el.className = `chat-msg${isOwn ? ' own' : ''}`;
+    el.innerHTML = `
+      <div class="chat-msg-av" style="background:${avatarColors[user.id]||'#64748b'}">${user.initials}</div>
+      <div class="chat-msg-body">
+        ${!isOwn ? `<div class="chat-msg-sender">${user.name}</div>` : ''}
+        <div class="chat-msg-bubble">${msg.text}</div>
+        <div class="chat-msg-time">${msg.time}</div>
+      </div>`;
+    container.appendChild(el);
+  });
+
+  if (messages.length === 0) {
+    container.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--text-3);font-size:.875rem">No messages yet. Start the conversation!</div>`;
+  }
+
+  container.scrollTop = container.scrollHeight;
+}
+
+function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input?.value.trim();
+  if (!text) return;
+
+  const room = state.currentChatRoom;
+  if (!MOCK.messages[room]) MOCK.messages[room] = [];
+
+  MOCK.messages[room].push({
+    id: Date.now(),
+    userId: state.currentUser.id,
+    text,
+    time: new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' }),
+    date: 'Today',
+  });
+
+  input.value = '';
+  input.style.height = 'auto';
+  renderMessages(room);
+
+  if (['general','ai-team'].includes(room)) {
+    const replies = [
+      "That's great progress!",
+      "Totally agree — let's sync on this.",
+      "Nice work, keep it going! 🚀",
+      "Can you share the details in the project channel?",
+      "Good call. I'll take a look.",
+    ];
+    const responder = MOCK.users.find(u => u.id !== state.currentUser.id);
+    if (responder) {
+      setTimeout(() => {
+        MOCK.messages[room].push({
+          id: Date.now() + 1,
+          userId: responder.id,
+          text: replies[Math.floor(Math.random() * replies.length)],
+          time: new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' }),
+          date: 'Today',
+        });
+        if (state.currentChatRoom === room) renderMessages(room);
+      }, 1800 + Math.random() * 1200);
+    }
+  }
+}
+
+/* ============================================================
+   CALENDAR
+   ============================================================ */
+let calendarDate = new Date(2026, 3, 1);
+
+function renderCalendar() {
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const monthEl = document.getElementById('cal-month');
+  if (monthEl) monthEl.textContent = `${months[calendarDate.getMonth()]} ${calendarDate.getFullYear()}`;
+
+  const firstDay = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 1).getDay();
+  const daysInMonth = new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 0).getDate();
+  const today = new Date();
+  const cells = document.getElementById('calendar-cells');
+  if (!cells) return;
+  cells.innerHTML = '';
+
+  const prevDays = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 0).getDate();
+  for (let i = firstDay - 1; i >= 0; i--) {
+    const c = document.createElement('div');
+    c.className = 'cal-cell other-month';
+    c.innerHTML = `<div class="cal-num">${prevDays - i}</div>`;
+    cells.appendChild(c);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = d === today.getDate() && calendarDate.getMonth() === today.getMonth() && calendarDate.getFullYear() === today.getFullYear();
+    const c = document.createElement('div');
+    c.className = `cal-cell${isToday ? ' today' : ''}`;
+    const dayEvents = MOCK.events.filter(e => e.date.getDate() === d && e.date.getMonth() === calendarDate.getMonth());
+    const dots = dayEvents.map(e => `<div class="cal-event-pip ${e.type}">${e.name}</div>`).join('');
+    c.innerHTML = `<div class="cal-num">${d}</div><div class="cal-event-dots">${dots}</div>`;
+    c.addEventListener('click', () => { if (dayEvents.length) showDayEvents(dayEvents[0]); });
+    cells.appendChild(c);
+  }
+
+  const total = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+  for (let i = 1; i <= total - firstDay - daysInMonth; i++) {
+    const c = document.createElement('div');
+    c.className = 'cal-cell other-month';
+    c.innerHTML = `<div class="cal-num">${i}</div>`;
+    cells.appendChild(c);
+  }
+}
+
+function changeMonth(dir) { calendarDate.setMonth(calendarDate.getMonth() + dir); renderCalendar(); }
+
+function showDayEvents(event) {
+  openModal('event-modal');
+  document.getElementById('modal-event-title').textContent = event.name;
+  document.getElementById('modal-event-desc').textContent = event.desc;
+  const typeEl = document.getElementById('modal-event-type');
+  typeEl.textContent = event.type;
+  typeEl.className = `chip chip-${event.type === 'competition' ? 'accent' : event.type === 'workshop' ? 'blue' : 'green'}`;
+  document.getElementById('modal-event-date').textContent = event.date.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+}
+
+/* ============================================================
+   MODALS
+   ============================================================ */
+function openModal(id) { document.getElementById(id)?.classList.add('open'); }
+function closeModal(id) { document.getElementById(id)?.classList.remove('open'); }
+
+function submitNewProject() {
+  const name = document.getElementById('new-proj-name')?.value.trim();
+  const desc = document.getElementById('new-proj-desc')?.value.trim();
+  const cat = document.getElementById('new-proj-category')?.value;
+  if (!name) { showToast('warning', 'Required', 'Please enter a project name.'); return; }
+  const emojis = { autonomous:'🤖', mechanical:'⚙️', ai:'🧠', electronics:'⚡', biotech:'💪', software:'💻' };
+  MOCK.projects.unshift({ id: MOCK.projects.length + 1, name, desc: desc || 'A new Build Robotics Studio project.', emoji: emojis[cat] || '🚀', tags: [cat], status: 'planning', members: [state.currentUser.id], progress: 0, category: cat });
+  closeModal('new-project-modal');
+  renderProjects('all');
+  showToast('success', 'Project created!', `"${name}" is now live in the hub.`);
+  if (document.getElementById('new-proj-name')) document.getElementById('new-proj-name').value = '';
+  if (document.getElementById('new-proj-desc')) document.getElementById('new-proj-desc').value = '';
+}
+
+function openProjectDetail(proj) {
+  openModal('project-detail-modal');
+  const members = proj.members.map(id => MOCK.users.find(u => u.id === id)).filter(Boolean);
+  const avatarColors = { 1:'#e55b2d', 2:'#16a34a', 3:'#7c3aed', 4:'#2563eb', 5:'#0891b2', 6:'#d97706', 7:'#db2777', 8:'#64748b' };
+  document.getElementById('modal-proj-title').textContent = proj.name;
+  document.getElementById('modal-proj-emoji').textContent = proj.emoji;
+  document.getElementById('modal-proj-desc').textContent = proj.desc;
+  const statusEl = document.getElementById('modal-proj-status');
+  const statusClass = { active:'chip-green', planning:'chip-blue', completed:'chip-neutral' };
+  statusEl.textContent = proj.status;
+  statusEl.className = `chip ${statusClass[proj.status] || 'chip-neutral'}`;
+  document.getElementById('modal-proj-progress').textContent = proj.progress + '%';
+  const bar = document.getElementById('modal-proj-progress-bar');
+  bar.style.width = '0';
+  setTimeout(() => { bar.style.width = proj.progress + '%'; }, 80);
+  document.getElementById('modal-proj-tags').innerHTML = proj.tags.map(t => `<span class="tag">${t}</span>`).join('');
+  document.getElementById('modal-proj-members').innerHTML = members.map(m => `
+    <div style="display:flex;align-items:center;gap:.625rem;padding:.375rem 0">
+      <div style="width:28px;height:28px;border-radius:50%;background:${avatarColors[m.id]||'#64748b'};display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:#fff;flex-shrink:0">${m.initials}</div>
+      <div><div style="font-size:.8125rem;font-weight:600;color:var(--text-1)">${m.name}</div><div style="font-size:.6875rem;color:var(--text-3)">${m.school} · ${m.role}</div></div>
+    </div>`).join('');
+}
+
+/* ============================================================
+   PROJECTS
+   ============================================================ */
+function renderProjects(filter) {
+  const grid = document.getElementById('projects-grid');
+  if (!grid) return;
+  const data = filter === 'all' ? MOCK.projects : MOCK.projects.filter(p => p.status === filter || p.category === filter);
+  const avatarColors = { 1:'#e55b2d', 2:'#16a34a', 3:'#7c3aed', 4:'#2563eb', 5:'#0891b2', 6:'#d97706', 7:'#db2777', 8:'#64748b' };
+  grid.innerHTML = data.map(proj => {
+    const avatars = proj.members.slice(0,4).map(id => { const u = MOCK.users.find(u => u.id === id); return u ? `<div class="member-avatar-xs" style="background:${avatarColors[id]||'#64748b'}">${u.initials}</div>` : ''; }).join('');
+    const statusMap = { active:'status-active', planning:'status-planning', completed:'status-completed' };
+    const statusText = { active:'Active', planning:'Planning', completed:'Completed' };
+    return `
+    <div class="project-card reveal" onclick="openProjectDetail(MOCK.projects.find(p=>p.id===${proj.id}))">
+      <div class="project-card-top">${proj.emoji}<span class="project-status ${statusMap[proj.status]||''}" style="position:absolute;top:.75rem;right:.75rem">${statusText[proj.status]||proj.status}</span></div>
+      <div class="project-card-body">
+        <div class="project-card-name">${proj.name}</div>
+        <div class="project-card-desc">${proj.desc}</div>
+        <div class="project-tags">${proj.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+        <div style="margin-bottom:.875rem"><div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span style="font-size:.6875rem;color:var(--text-3)">Progress</span><span style="font-family:var(--font-mono);font-size:.6875rem;color:var(--text-2)">${proj.progress}%</span></div><div class="prog-bar"><div class="prog-fill" data-width="${proj.progress}%" style="width:0"></div></div></div>
+        <div class="project-card-footer"><div style="display:flex;align-items:center"><div class="member-stack">${avatars}</div><span class="member-count-label">${proj.members.length} member${proj.members.length!==1?'s':''}</span></div><button class="btn btn-sm btn-outline" onclick="event.stopPropagation();joinProject(${proj.id})">${proj.members.includes(state.currentUser.id) ? '✓ Joined' : '+ Join'}</button></div>
+      </div>
+    </div>`;
+  }).join('');
+  setTimeout(() => { initScrollReveal(); animateProgressBars(); }, 80);
+}
+
+function filterProjects(filter) {
+  document.querySelectorAll('#projects-filter-bar .filter-tab').forEach(c => c.classList.toggle('active', c.dataset.filter === filter));
+  renderProjects(filter);
+}
+
+function joinProject(id) {
+  const proj = MOCK.projects.find(p => p.id === id);
+  if (!proj || proj.members.includes(state.currentUser.id)) return;
+  proj.members.push(state.currentUser.id);
+  renderProjects('all');
+  showToast('success', 'Joined!', `You joined "${proj.name}"`);
+}
+
+/* ============================================================
+   NOTIFICATIONS
+   ============================================================ */
+function toggleNotifications() {
+  state.notifOpen = !state.notifOpen;
+  document.getElementById('notif-panel')?.classList.toggle('open', state.notifOpen);
+}
+
+function markAllRead() {
+  document.querySelectorAll('.notif-item.unread').forEach(el => el.classList.remove('unread'));
+  document.getElementById('notif-pip')?.remove();
+  showToast('info', 'Cleared', 'All notifications marked as read.');
+  state.notifOpen = false;
+  document.getElementById('notif-panel')?.classList.remove('open');
+}
+
+/* ============================================================
+   LEADERBOARD SKILL BARS
+   ============================================================ */
+function initSkillBars() {
+  document.querySelectorAll('.skill-bar-fill[data-width]').forEach(bar => {
+    setTimeout(() => { bar.style.width = bar.dataset.width; }, 150);
+  });
+}
+
+/* ============================================================
+   PROFILE
+   ============================================================ */
+function openProfile(userId) {
+  const user = MOCK.users.find(u => u.id === userId);
+  if (!user) return;
+  const colors = { 1:'#e55b2d', 2:'#16a34a', 3:'#7c3aed', 4:'#2563eb', 5:'#0891b2', 6:'#d97706', 7:'#db2777', 8:'#64748b' };
+  const roleLabels = { lead:'chip-accent', builder:'chip-blue', designer:'chip-neutral', mentor:'chip-green', student:'chip-neutral' };
+  openModal('profile-modal');
+  const initEl = document.getElementById('modal-profile-initials');
+  initEl.style.background = colors[user.id] || '#64748b';
+  initEl.textContent = user.initials;
+  document.getElementById('modal-profile-name').textContent = user.name;
+  const roleEl = document.getElementById('modal-profile-role');
+  roleEl.textContent = user.role;
+  roleEl.className = `chip ${roleLabels[user.role] || 'chip-neutral'}`;
+  document.getElementById('modal-profile-school').textContent = user.school;
+  document.getElementById('modal-profile-points').textContent = user.points.toLocaleString();
+  document.getElementById('modal-profile-skills').innerHTML = user.skills.map(s => `<span class="profile-skill">${s}</span>`).join('');
+  document.getElementById('modal-profile-badges').innerHTML = user.badges.join(' ');
+}
+
+/* ============================================================
+   RESOURCES FILTER
+   ============================================================ */
+function filterResources(topic) {
+  document.querySelectorAll('.res-cat').forEach(c => c.classList.toggle('active', c.dataset.topic === topic));
+  document.querySelectorAll('.resource-card').forEach(card => {
+    card.style.display = topic === 'all' || card.dataset.topic === topic ? '' : 'none';
+  });
+}
+
+/* ============================================================
+   RSVP
+   ============================================================ */
+function rsvpEvent() {
+  showToast('success', 'RSVP confirmed!', "You're registered. Check your calendar.");
+  closeModal('event-modal');
+}
+
+/* ============================================================
+   SIDEBAR TOGGLE (mobile)
+   ============================================================ */
+function toggleSidebar() {
+  document.querySelector('.app-sidebar')?.classList.toggle('open');
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+function showToast(type, title, message) {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+  const icons = { success:'✓', info:'i', warning:'!', error:'✕' };
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `
+    <div class="toast-icon">${icons[type] || 'i'}</div>
+    <div class="toast-body">
+      <div class="toast-title">${title}</div>
+      ${message ? `<div class="toast-msg">${message}</div>` : ''}
+    </div>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('removing');
+    setTimeout(() => toast.remove(), 250);
+  }, 4000);
+}
+
+/* ============================================================
+   LIVE ACTIVITY SIMULATION
+   ============================================================ */
+function startLiveUpdates() {
+  const updates = [
+    () => showToast('info', 'Live update', 'Maya Rodriguez pushed new code to HydroBot'),
+    () => showToast('info', 'New member', 'Devon Wells just joined the studio'),
+    () => showToast('success', 'Milestone', 'ExoArm Assist reached 88% progress'),
+    () => showToast('info', 'Reminder', 'Circuit Design Sprint starts in 1 hour'),
+  ];
+  let i = 0;
+  setTimeout(() => {
+    const iv = setInterval(() => {
+      if (document.getElementById('app')?.classList.contains('active')) {
+        updates[i % updates.length]();
+        i++;
+      }
+      if (i >= updates.length) clearInterval(iv);
+    }, 14000);
+  }, 10000);
+}
+
+/* ============================================================
+   DOM READY
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  runLoader();
+
+  document.addEventListener('click', e => {
+    if (state.notifOpen && !e.target.closest('#notif-panel') && !e.target.closest('#notif-btn')) {
+      state.notifOpen = false;
+      document.getElementById('notif-panel')?.classList.remove('open');
+    }
+  });
+
+  const chatInput = document.getElementById('chat-input');
+  if (chatInput) {
+    chatInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    });
+    chatInput.addEventListener('input', () => {
+      chatInput.style.height = 'auto';
+      chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+    });
+  }
+
+  const nav = document.querySelector('.site-nav');
+  window.addEventListener('scroll', () => {
+    if (nav) nav.style.boxShadow = window.scrollY > 10 ? '0 1px 0 var(--border)' : 'none';
+  }, { passive: true });
+
+  renderProjects('all');
+  startLiveUpdates();
+});
+
 /* ---- Render Profiles ---- */
 function renderProfiles(filter) {
   const grid = document.getElementById('profiles-grid');
